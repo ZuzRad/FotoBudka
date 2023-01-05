@@ -1,4 +1,4 @@
-const MB = 25; // 5 MB
+const MB = 10; // 5 MB
 const FILE_SIZE_LIMIT = MB * 1024 * 1024;
 
 export const fileSizeLimiter = (req, res, next) => {
@@ -10,17 +10,14 @@ export const fileSizeLimiter = (req, res, next) => {
 		}
 	});
 	if (filesOverLimit.length) {
-		const properVerb = filesOverLimit.length > 1 ? 'are' : 'is';
-		const sentence =
-			`Upload failed. ${filesOverLimit.toString()} ${properVerb} over the file size limit of ${MB} MB.`.replaceAll(
-				',',
-				', '
-			);
-		const message =
-			filesOverLimit.length < 3
-				? sentence.replace(',', ' and')
-				: sentence.replace(/,(?=[^,]*$)/, ' and');
-		return res.status(413).json({ status: '413 error', message });
+		return res.status(413).json({
+			status: '413 error',
+			message:
+				`Upload failed. ${filesOverLimit.toString()} over the file size limit of ${MB} MB.`.replaceAll(
+					',',
+					', '
+				),
+		});
 	}
 	next();
 };
