@@ -23,13 +23,13 @@ export const uploadImages = (req, res) => {
 
 	// (async () => {
 	// 	await imagemin(['banners/*.jpg'], {
-	// 		destination: 'build/banners',
+	// 		destination: 'banners/build',
 	// 		plugins: [imageminJpegtran(), imageminMozjpeg({ quality: 75 })],
 	// 	});
 	// 	console.log('images optimized');
 	// })();
 
-	let bannerImage = fs.readFileSync(__dirname + `build\\banners\\${banner}.jpg`);
+	let bannerImage = fs.readFileSync(__dirname + `banners\\build\\${banner}.jpg`);
 
 	doc.addImage(bannerImage, 'JPEG', 90, 0, 15, 297, 'banner', 'FAST');
 	doc.addImage(bannerImage, 'JPEG', 195, 0, 15, 297, 'banner', 'FAST');
