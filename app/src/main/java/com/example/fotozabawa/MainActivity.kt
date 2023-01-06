@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         myTextrureView = findViewById(com.example.fotozabawa.R.id.textureView)
         myCameraManager = getSystemService(CAMERA_SERVICE) as CameraManager
         openCamera()
+        //cameraPreview()
     }
 
     private val myStateCallBack: CameraDevice.StateCallback =
