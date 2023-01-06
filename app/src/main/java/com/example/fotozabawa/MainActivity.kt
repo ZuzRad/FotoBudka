@@ -33,10 +33,24 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var toggle : ActionBarDrawerToggle
+    lateinit var drawerLayout: DrawerLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.example.fotozabawa.R.layout.fragment_strona_glowna)
+        setContentView(com.example.fotozabawa.R.layout.activity_main)
+        drawerLayout = findViewById(com.example.fotozabawa.R.id.drawerLayout)
+        replaceFragment(StronaGlownaFragment(),"Strona Główna")
+    }
 
+
+    private fun replaceFragment(fragment : Fragment, title:String){
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(com.example.fotozabawa.R.id.frameLayout,fragment)
+        fragmentTransaction.commit()
+        drawerLayout.closeDrawers()
+        setTitle(title)
     }
 }
 //    //----------------------------wersja 1 klikając start pojawi się kamera w tle (jeszcze nie robi zdjęć)--------------------------------
