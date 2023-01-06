@@ -35,7 +35,7 @@ class MenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //----------------------lista(nie działa hehe)--------------------
+        //----------------------lista--------------------
         val spinner_tryb = view.findViewById<Spinner>(R.id.spinner_tryb)
 
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, tryby)
@@ -60,6 +60,8 @@ class MenuFragment : Fragment() {
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
+        //----------------------powrót z menu------------------
 
         val myButton = view.findViewById<Button>(R.id.button_start)
         myButton.setOnClickListener{
