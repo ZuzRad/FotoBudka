@@ -52,7 +52,7 @@ class StronaGlownaFragment : Fragment() {
         }
         val buttonStart = view.findViewById<Button>(R.id.button_start)
         buttonStart.setOnClickListener {
-            cameraPreview()
+
         }
     }
 
