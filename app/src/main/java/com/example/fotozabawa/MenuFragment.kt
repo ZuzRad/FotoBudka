@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import com.example.fotozabawa.databinding.FragmentMenuBinding
 import androidx.fragment.app.Fragment
 
@@ -28,6 +30,8 @@ class MenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val spinner = view.findViewById<Spinner>(R.id.spinner_tryb)
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.)
         val myButton = view.findViewById<Button>(R.id.button_start)
         myButton.setOnClickListener{
             val fragment : Fragment = StronaGlownaFragment()
