@@ -18,7 +18,7 @@ import kotlinx.coroutines.NonDisposableHandle.parent
 class MenuFragment : Fragment() {
     private var _binding: FragmentMenuBinding? = null
     private val binding get() = _binding!!
-    private val tryby = arrayOf("1 zdjęcie", "2 zdjęcia", "3 zdjęcia", "4 zdjęcia", "5 zdjęć")
+    private val tryby = arrayOf("1 zdjęcie", "2 zdjęcia", "3 zdjęcia", "6 zdjęć")
     private val czas = arrayOf("1 sekunda", "3 sekundy", "5 sekund", "10 sekund")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
