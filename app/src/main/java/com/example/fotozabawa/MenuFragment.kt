@@ -36,7 +36,7 @@ class MenuFragment : Fragment() {
             fragmentTransaction.replace(R.id.frameLayout, fragment)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
-            requireActivity().title = "Menu"
+            requireActivity().title = "Strona Główna"
         }
     }
 }
