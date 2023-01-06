@@ -1,9 +1,5 @@
 <resources>
-    <string name="app_name">FOTOzabawa</string>
-    <string-array name="tryby">
-        <item>1 x 6</item>
-        <item>2 x 3</item>
-        <item>3 x 2</item>
-        <item>6 x 1</item>
-    </string-array>
+  <string name="open">Open</string>
+  <string name="close">Close</string>
+  <string name="app_name">Name</string>
 </resources>
