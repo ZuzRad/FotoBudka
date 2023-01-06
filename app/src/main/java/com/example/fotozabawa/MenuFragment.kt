@@ -36,21 +36,30 @@ class MenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //----------------------lista(nie działa hehe)--------------------
-//        val spinner_tryb = view.findViewById<Spinner>(R.id.spinner_tryb)
-//        spinner_tryb?.adapter=
-//            activity?.let { ArrayAdapter<String>(it.applicationContext,R.layout.fragment_menu, tryby) }
-//        spinner_tryb?.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
-//            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-//
-//                //tryby[p2]
-//            }
-//
-//            override fun onNothingSelected(p0: AdapterView<*>?) {
-//
-//            }
-//
-//        }
-//        val spinner_czas = view.findViewById<Spinner>(R.id.spinner_czas)
+        val spinner_tryb = view.findViewById<Spinner>(R.id.spinner_tryb)
+
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, tryby)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner_tryb.adapter = adapter
+        spinner_tryb.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                spinner_tryb.setSelection(position)
+                spinner_tryb.setPrompt(tryby[position])
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        val spinner_czas = view.findViewById<Spinner>(R.id.spinner_czas)
+        val adapter2 = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, czas)
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner_czas.adapter = adapter2
+        spinner_czas.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                spinner_czas.setSelection(position)
+                spinner_czas.setPrompt(czas[position])
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         val myButton = view.findViewById<Button>(R.id.button_start)
         myButton.setOnClickListener{
