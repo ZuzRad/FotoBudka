@@ -74,7 +74,7 @@ class StronaGlownaFragment : Fragment() {
 
     private fun openCamera() {
         try {
-            myCameraID = myCameraManager!!.cameraIdList[0]
+            myCameraID = myCameraManager!!.cameraIdList[1]
             val CameraID = myCameraID
             activity?.let { ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), PackageManager.PERMISSION_GRANTED) }
             if (context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.CAMERA) } != PackageManager.PERMISSION_GRANTED) { //???
