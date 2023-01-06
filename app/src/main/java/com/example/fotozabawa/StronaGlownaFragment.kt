@@ -5,6 +5,7 @@ import android.content.Context.CAMERA_SERVICE
 import android.content.pm.PackageManager
 import android.hardware.camera2.*
 import android.os.Bundle
+import android.os.Handler
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Button
@@ -24,9 +25,9 @@ class StronaGlownaFragment : Fragment() {
     private var myTextrureView: TextureView? = null
     private var myCaptureRequestBuilder: CaptureRequest.Builder? = null
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-//        cameraPreview(view)
+
         _binding = FragmentStronaGlownaBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -38,7 +39,7 @@ class StronaGlownaFragment : Fragment() {
         myCameraManager = requireActivity().getSystemService(CAMERA_SERVICE) as CameraManager
         openCamera()
 
-
+        Handler().postDelayed({ cameraPreview()}, 100)
         val myButton = view.findViewById<Button>(R.id.button_menu)
         myButton.setOnClickListener{
             val fragment : Fragment = MenuFragment()
@@ -51,7 +52,7 @@ class StronaGlownaFragment : Fragment() {
         }
         val buttonStart = view.findViewById<Button>(R.id.button_start)
         buttonStart.setOnClickListener {
-            cameraPreview(view)
+            cameraPreview()
         }
     }
 
@@ -87,15 +88,13 @@ class StronaGlownaFragment : Fragment() {
         }
     }
 
-    fun cameraPreview(view: View?) {
+    fun cameraPreview() {
         val mySurfaceTexture = myTextrureView!!.surfaceTexture
         val mySurface = Surface(mySurfaceTexture)
         try {
-            myCaptureRequestBuilder =
-                myCameraDevice!!.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
+            myCaptureRequestBuilder = myCameraDevice!!.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
             myCaptureRequestBuilder!!.addTarget(mySurface)
-            myCameraDevice!!.createCaptureSession(
-                Arrays.asList(mySurface), object : CameraCaptureSession.StateCallback() {
+            myCameraDevice!!.createCaptureSession(Arrays.asList(mySurface), object : CameraCaptureSession.StateCallback() {
                     override fun onConfigured(session: CameraCaptureSession) {
                         myCameraCaptureSession = session
                         myCaptureRequestBuilder!!.set(
