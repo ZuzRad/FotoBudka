@@ -9,33 +9,35 @@ import android.graphics.BitmapFactory
 import android.graphics.ImageFormat
 import android.hardware.camera2.*
 import android.media.ImageReader
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.provider.MediaStore
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.Toast
+import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import com.example.fotozabawa.databinding.FragmentStronaGlownaBinding
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
+import java.text.SimpleDateFormat
 import java.util.*
 
 
 class StronaGlownaFragment : Fragment() {
     private var _binding: FragmentStronaGlownaBinding? = null
     private val binding get() = _binding!!
-//    private var myCameraCaptureSession: CameraCaptureSession? = null
-//    private var myCameraID: String? = null
-//    private var myCameraManager: CameraManager? = null
-//    private var myCameraDevice: CameraDevice? = null
-//    private var myTextrureView: TextureView? = null
-//    private var myCaptureRequestBuilder: CaptureRequest.Builder? = null
     private var imageCapture: ImageCapture? = null
     private lateinit var outputDirectory: File
 
@@ -52,12 +54,23 @@ class StronaGlownaFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        val texture = view.findViewById<TextureView>(R.id.textureView)
-//        myTextrureView = view.findViewById(R.id.textureView)
-//        myCameraManager = requireActivity().getSystemService(CAMERA_SERVICE) as CameraManager
-//        openCamera()
-//
-//        Handler().postDelayed({ cameraPreview() }, 100)
+        outputDirectory = getOutputDirectory()
+
+        if(allPermissionGranted()){
+            startCamera()
+        }else{
+            Toast.makeText(activity?.applicationContext,"Permissions requested", Toast.LENGTH_SHORT).show()
+            activity?.let {
+                ActivityCompat.requestPermissions(
+                    it,arrayOf(Manifest.permission.CAMERA),123)
+            }
+        }
+
+        val buttonStart = view.findViewById<Button>(R.id.button_start)
+        buttonStart.setOnClickListener {
+            takePhoto()
+        }
+
         val myButton = view.findViewById<Button>(R.id.button_menu)
         myButton.setOnClickListener {
             val fragment: Fragment = MenuFragment()
@@ -69,103 +82,78 @@ class StronaGlownaFragment : Fragment() {
             requireActivity().title = "Menu"
         }
     }
-}
-//        val buttonStart = view.findViewById<Button>(R.id.button_start)
-//        buttonStart.setOnClickListener {
-//            val bitmap = texture.getBitmap()
-//            val directory = Environment.getExternalStorageDirectory().toString() + "/" + Environment.DIRECTORY_DCIM + "/Camera"
-//            Toast.makeText(activity?.applicationContext, directory, Toast.LENGTH_SHORT).show()
-//
-//            val imageReader = ImageReader.newInstance(640, 480, ImageFormat.JPEG, 2)
-//            imageReader.setOnImageAvailableListener({ reader ->
-//                val image = reader.acquireLatestImage()
-//                val planes = image.planes
-//                val buffer = planes[0].buffer
-//                val bytes = ByteBuffer.allocate(buffer.capacity()).put(buffer).array()
-//                val byteArray = bytes
-//
-//                // Save the byte[] to a file and insert it into the media store...
-//                val myoutput = FileOutputStream(directory)
-//                bitmap!!.compress(Bitmap.CompressFormat.JPEG, 100, myoutput)
-//                myoutput.close()
-//
-//            val values = ContentValues().apply {
-//                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-//                put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000)
-//                put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis())
-//            }
-//            val uri = requireContext().contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-//            val outputStream = requireContext().contentResolver.openOutputStream(uri!!)
-//            outputStream!!.write(byteArray)
-//            outputStream.close()
-//            }, null)
-//
-//        }
 
-//
-//    private val myStateCallBack: CameraDevice.StateCallback =
-//        object : CameraDevice.StateCallback() {
-//            override fun onOpened(camera: CameraDevice) {
-//                myCameraDevice = camera
-//            }
-//
-//            override fun onDisconnected(camera: CameraDevice) {
-//                myCameraDevice!!.close()
-//            }
-//
-//            override fun onError(camera: CameraDevice, error: Int) {
-//                myCameraDevice!!.close()
-//                myCameraDevice = null
-//            }
-//        }
-//
-//    private fun openCamera() {
-//        try {
-//            myCameraID = myCameraManager!!.cameraIdList[1]
-//            val CameraID = myCameraID
-//            activity?.let { ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), PackageManager.PERMISSION_GRANTED) }
-//            if (context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.CAMERA) } != PackageManager.PERMISSION_GRANTED) { //???
-//                return
-//            }
-//            if (CameraID != null) {
-//                myCameraManager!!.openCamera(CameraID, myStateCallBack, null)
-//            }
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//    }
-//
-//    fun cameraPreview() {
-//        val mySurfaceTexture = myTextrureView!!.surfaceTexture
-//        val mySurface = Surface(mySurfaceTexture)
-//        try {
-//            myCaptureRequestBuilder = myCameraDevice!!.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
-//            myCaptureRequestBuilder!!.addTarget(mySurface)
-//            myCameraDevice!!.createCaptureSession(Arrays.asList(mySurface), object : CameraCaptureSession.StateCallback() {
-//                    override fun onConfigured(session: CameraCaptureSession) {
-//                        myCameraCaptureSession = session
-//                        myCaptureRequestBuilder!!.set(
-//                            CaptureRequest.CONTROL_MODE,
-//                            CameraMetadata.CONTROL_MODE_AUTO
-//                        )
-//                        try {
-//                            myCameraCaptureSession!!.setRepeatingRequest(
-//                                myCaptureRequestBuilder!!.build(),
-//                                null,
-//                                null
-//                            )
-//                        } catch (e: CameraAccessException) {
-//                            e.printStackTrace()
-//                        }
-//                    }
-//
-//                    override fun onConfigureFailed(session: CameraCaptureSession) {}
-//                }, null
-//            )
-//        } catch (e: CameraAccessException) {
-//            e.printStackTrace()
-//        }
-//    }
+    private fun getOutputDirectory(): File{
+        val mediaDir = activity?.externalMediaDirs?.firstOrNull()?.let{ mFile ->
+            File(mFile, resources.getString(R.string.app_name)).apply{
+                mkdirs()
+            }
+        }
+        return if (mediaDir != null && mediaDir.exists())
+            mediaDir else activity?.filesDir!!
+    }
+
+    private fun takePhoto(){
+        val imageCapture = imageCapture?:return
+        val photoFile = File(
+            outputDirectory,
+            SimpleDateFormat(Constants.FILE_NAME_FORMAT, Locale.getDefault()).format(System.currentTimeMillis()) + ".jpg")
+
+        val outputOption = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+        imageCapture.takePicture(
+            outputOption, ContextCompat.getMainExecutor(requireContext()),
+            object :ImageCapture.OnImageSavedCallback{
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    val savedUri = Uri.fromFile(photoFile)
+                    val msg = "photo saved"
+                    Toast.makeText(requireActivity(), "$msg $savedUri", Toast.LENGTH_LONG).show()
+                }
+                override fun onError(exception: ImageCaptureException) {
+                    Log.d(Constants.TAG, "onError: ${exception.message}",exception)
+                }
+            }
+        )
+    }
+
+    private fun startCamera(){
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+        cameraProviderFuture.addListener({
+            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+            val preview = Preview.Builder().build().also { mPreview->
+                mPreview.setSurfaceProvider(binding.viewFinder.surfaceProvider)
+            }
+            imageCapture = ImageCapture.Builder().build()
+            val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+
+            try{
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
+            }catch (e:Exception){
+                Log.d(Constants.TAG, "startCamera Fail:", e)
+            }
+        }, ContextCompat.getMainExecutor(requireContext()))
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if(requestCode == Constants.REQUEST_CODE_PERMISSIONS){
+            if(allPermissionGranted()){
+                startCamera()
+            }else{
+                Toast.makeText(requireContext(),"permissions not granted by the user", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+    }
+    private fun allPermissionGranted()= Constants.REQUIRED_PERMISSIONS.all{
+        ContextCompat.checkSelfPermission(requireActivity().baseContext,it)== PackageManager.PERMISSION_GRANTED
+    }
+
+}
+
 
 
 
