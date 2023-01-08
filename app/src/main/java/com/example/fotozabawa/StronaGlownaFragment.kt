@@ -18,6 +18,7 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Button
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -66,10 +67,18 @@ class StronaGlownaFragment : Fragment() {
             }
         }
 
+
+
+
         val buttonStart = view.findViewById<Button>(R.id.button_start)
         buttonStart.setOnClickListener {
+
             takePhoto()
         }
+
+
+
+
 
         val myButton = view.findViewById<Button>(R.id.button_menu)
         myButton.setOnClickListener {

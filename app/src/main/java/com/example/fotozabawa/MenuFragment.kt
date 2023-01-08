@@ -45,6 +45,9 @@ class MenuFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 spinner_tryb.setSelection(position)
                 spinner_tryb.setPrompt(tryby[position])
+
+
+
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
@@ -57,6 +60,9 @@ class MenuFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 spinner_czas.setSelection(position)
                 spinner_czas.setPrompt(czas[position])
+
+
+
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
