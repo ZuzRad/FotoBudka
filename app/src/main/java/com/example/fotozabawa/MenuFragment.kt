@@ -9,20 +9,29 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import com.example.fotozabawa.databinding.FragmentMenuBinding
 import androidx.fragment.app.Fragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.NonDisposableHandle.parent
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 class MenuFragment : Fragment() {
+    private lateinit var appDatabase: AppDatabase
     private var _binding: FragmentMenuBinding? = null
     private val binding get() = _binding!!
     private val tryby = arrayOf("1 zdjęcie", "2 zdjęcia", "3 zdjęcia", "6 zdjęć")
     private val czas = arrayOf("1 sekunda", "3 sekundy", "5 sekund", "10 sekund")
+    private var tryb_selected = "1 zdjęcie"
+    private var czas_selected = "1 sekunda"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
+        appDatabase = AppDatabase.getDatabase(requireContext())
         return binding.root
     }
 
@@ -45,8 +54,7 @@ class MenuFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 spinner_tryb.setSelection(position)
                 spinner_tryb.setPrompt(tryby[position])
-
-
+                tryb_selected=tryby[position]
 
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -60,9 +68,7 @@ class MenuFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 spinner_czas.setSelection(position)
                 spinner_czas.setPrompt(czas[position])
-
-
-
+                czas_selected=czas[position]
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
@@ -71,6 +77,14 @@ class MenuFragment : Fragment() {
 
         val myButton = view.findViewById<Button>(R.id.button_start)
         myButton.setOnClickListener{
+
+//            GlobalScope.launch(Dispatchers.IO) {
+//                val ustawienie = Ustawienia(tryb_selected, czas_selected)
+//                appDatabase.ustawieniaDao().insert(ustawienie)
+//                val text = view.findViewById<TextView>(R.id.textView_tryb)
+//                text.setText(appDatabase.ustawieniaDao().getAll().toString())
+//            }
+
             val fragment : Fragment = StronaGlownaFragment()
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()

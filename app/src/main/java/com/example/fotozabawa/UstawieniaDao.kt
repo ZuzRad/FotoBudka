@@ -10,6 +10,9 @@ interface UstawieniaDao {
     @Insert
     suspend fun insert(ustawienia: Ustawienia)
 
+    @Update
+    suspend fun update(ustawienia: Ustawienia)
+
     @Delete
     suspend fun delete(ustawienia: Ustawienia)
 
