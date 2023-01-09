@@ -13,11 +13,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.fotozabawa.databinding.FragmentMenuBinding
 import androidx.fragment.app.Fragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.NonDisposableHandle.parent
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 
 class MenuFragment : Fragment() {
@@ -28,6 +25,8 @@ class MenuFragment : Fragment() {
     private val czas = arrayOf("1 sekunda", "3 sekundy", "5 sekund", "10 sekund")
     private var tryb_selected = "1 zdjęcie"
     private var czas_selected = "1 sekunda"
+    private var tryb_position = 0
+    private var czas_position = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
@@ -41,6 +40,7 @@ class MenuFragment : Fragment() {
     }
 
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -55,6 +55,7 @@ class MenuFragment : Fragment() {
                 spinner_tryb.setSelection(position)
                 spinner_tryb.setPrompt(tryby[position])
                 tryb_selected=tryby[position]
+                tryb_position=position
 
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -69,22 +70,29 @@ class MenuFragment : Fragment() {
                 spinner_czas.setSelection(position)
                 spinner_czas.setPrompt(czas[position])
                 czas_selected=czas[position]
+                czas_position=position
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-
+        runBlocking(Dispatchers.IO) {
+            czas_position = appDatabase.ustawieniaDao().getCzas_position()
+            tryb_position = appDatabase.ustawieniaDao().getTryb_position()
+        }
+        spinner_czas.setSelection(czas_position)
+        spinner_tryb.setSelection(tryb_position)
         //----------------------powrót z menu------------------
 
         val myButton = view.findViewById<Button>(R.id.button_start)
         myButton.setOnClickListener{
-
-//            GlobalScope.launch(Dispatchers.IO) {
-//                val ustawienie = Ustawienia(tryb_selected, czas_selected)
-//                appDatabase.ustawieniaDao().insert(ustawienie)
-//                val text = view.findViewById<TextView>(R.id.textView_tryb)
-//                text.setText(appDatabase.ustawieniaDao().getAll().toString())
-//            }
-
+            var ustawienie = Ustawienia("",0,"",0)
+            var callback = ""
+            runBlocking(Dispatchers.IO) {
+                appDatabase.ustawieniaDao().deleteAll()
+                ustawienie = Ustawienia(czas_selected,czas_position,tryb_selected,tryb_position)
+                appDatabase.ustawieniaDao().insert(ustawienie)
+                callback = appDatabase.ustawieniaDao().getCzas().subSequence(0,1).toString()
+            }
+            Toast.makeText(requireContext(), callback, Toast.LENGTH_SHORT).show()
             val fragment : Fragment = StronaGlownaFragment()
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()

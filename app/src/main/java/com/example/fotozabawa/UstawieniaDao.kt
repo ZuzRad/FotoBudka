@@ -1,11 +1,20 @@
-package com.example.fotozabawa;
+package com.example.fotozabawa
 
-import androidx.room.*;
+import androidx.room.*
 
 @Dao
 interface UstawieniaDao {
-    @Query("SELECT * FROM ustawienia")
-    fun getAll(): List<Ustawienia>
+    @Query("SELECT czas FROM ustawienia")
+    fun getCzas(): String
+
+    @Query("SELECT czas_position FROM ustawienia")
+    fun getCzas_position(): Int
+
+    @Query("SELECT tryb FROM ustawienia")
+    fun getTryb(): String
+
+    @Query("SELECT tryb_position FROM ustawienia")
+    fun getTryb_position(): Int
 
     @Insert
     suspend fun insert(ustawienia: Ustawienia)

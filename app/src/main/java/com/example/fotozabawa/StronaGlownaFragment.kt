@@ -29,6 +29,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import com.example.fotozabawa.databinding.FragmentStronaGlownaBinding
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
@@ -37,10 +38,12 @@ import java.util.*
 
 
 class StronaGlownaFragment : Fragment() {
+    private lateinit var appDatabase: AppDatabase
     private var _binding: FragmentStronaGlownaBinding? = null
     private val binding get() = _binding!!
     private var imageCapture: ImageCapture? = null
     private lateinit var outputDirectory: File
+
 
 
     override fun onCreateView(
@@ -50,6 +53,7 @@ class StronaGlownaFragment : Fragment() {
     ): View? {
 
         _binding = FragmentStronaGlownaBinding.inflate(inflater, container, false)
+        appDatabase = AppDatabase.getDatabase(requireContext())
         return binding.root
     }
 
@@ -72,7 +76,11 @@ class StronaGlownaFragment : Fragment() {
 
         val buttonStart = view.findViewById<Button>(R.id.button_start)
         buttonStart.setOnClickListener {
+            var czas_selected = appDatabase.ustawieniaDao().getCzas_position()
+            var tryb_selected = appDatabase.ustawieniaDao().getTryb_position()
+            runBlocking {
 
+            }
             takePhoto()
         }
 
