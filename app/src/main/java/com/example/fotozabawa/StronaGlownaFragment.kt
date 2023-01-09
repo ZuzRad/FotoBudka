@@ -78,25 +78,30 @@ class StronaGlownaFragment : Fragment() {
 
 //<----------Tutaj wydaje się dźwięk odliczenia do zaczęcia serii zdjęć---------->//
 
-                    runBlocking {
-                        for (x in 2..czas_number.await()) {
-                            delay(1000)
-                            toneGen1.startTone(ToneGenerator.TONE_CDMA_INTERCEPT, 150)
-                        }
-                        delay(1000)
-                        toneGen1.startTone(ToneGenerator.TONE_CDMA_INTERCEPT, 300)
-                        //<----------A tu się kończy---------->//
-
-                    }
+//                    runBlocking {
+//                        for (x in 1..5) {
+//                            delay(1000)
+//                            toneGen1.startTone(ToneGenerator.TONE_CDMA_INTERCEPT, 150)
+//                        }
+//                        delay(1000)
+//                        toneGen1.startTone(ToneGenerator.TONE_CDMA_INTERCEPT, 300)
+//                        //<----------A tu się kończy---------->//
+//
+//                    }
                     launch {
-                        delay(1000)
-       //<----------Tutaj co 3 sekundy wydajemy dźwięk i cykamy zdjęcie---------->//
+       //<----------Iteracje, zdjęcia, beepy---------->//
 
                         for (x in 1..tryb_number.await()) {
-                            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150)
+
+                            for (y in 1..czas_number.await()){
+                                toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150)
+                                delay(1000)
+                            }
+                            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 300)
+                            delay(1000)
                             takePhoto()
-                            delay(3000)
                         }
+                        toneGen1.startTone(ToneGenerator.TONE_CDMA_LOW_SSL, 500)
                     }
 
                 }
