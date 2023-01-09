@@ -1,24 +1,18 @@
 package com.example.fotozabawa
 
 import android.Manifest
-import android.content.ContentValues
-import android.content.Context.CAMERA_SERVICE
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageFormat
-import android.hardware.camera2.*
-import android.media.ImageReader
+import android.media.AudioManager
+import android.media.ToneGenerator
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
-import android.provider.MediaStore
+import android.os.Looper
 import android.util.Log
-import android.view.*
-import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -27,14 +21,13 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.Fragment
 import com.example.fotozabawa.databinding.FragmentStronaGlownaBinding
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import java.io.File
-import java.io.FileOutputStream
-import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.concurrent.schedule
 
 
 class StronaGlownaFragment : Fragment() {
@@ -73,20 +66,43 @@ class StronaGlownaFragment : Fragment() {
 
 
 
+        val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 1000)
 
         val buttonStart = view.findViewById<Button>(R.id.button_start)
         buttonStart.setOnClickListener {
-            var czas_selected = appDatabase.ustawieniaDao().getCzas_position()
-            var tryb_selected = appDatabase.ustawieniaDao().getTryb_position()
-            runBlocking {
+
+            runBlocking(Dispatchers.IO) {
+                launch {
+                    var czas_number = async { appDatabase.ustawieniaDao().getCzas() }
+                    var tryb_number = async { appDatabase.ustawieniaDao().getTryb() }
+
+//<----------Tutaj wydaje się dźwięk odliczenia do zaczęcia serii zdjęć---------->//
+
+                    runBlocking {
+                        for (x in 2..czas_number.await()) {
+                            delay(1000)
+                            toneGen1.startTone(ToneGenerator.TONE_CDMA_INTERCEPT, 150)
+                        }
+                        delay(1000)
+                        toneGen1.startTone(ToneGenerator.TONE_CDMA_INTERCEPT, 300)
+                        //<----------A tu się kończy---------->//
+
+                    }
+                    launch {
+                        delay(1000)
+       //<----------Tutaj co 3 sekundy wydajemy dźwięk i cykamy zdjęcie---------->//
+
+                        for (x in 1..tryb_number.await()) {
+                            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150)
+                            takePhoto()
+                            delay(3000)
+                        }
+                    }
+
+                }
 
             }
-            takePhoto()
         }
-
-
-
-
 
         val myButton = view.findViewById<Button>(R.id.button_menu)
         myButton.setOnClickListener {
@@ -123,7 +139,7 @@ class StronaGlownaFragment : Fragment() {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
                     val msg = "photo saved"
-                    Toast.makeText(requireActivity(), "$msg $savedUri", Toast.LENGTH_LONG).show()
+                    //Toast.makeText(requireActivity(), "$msg $savedUri", Toast.LENGTH_LONG).show()
                 }
                 override fun onError(exception: ImageCaptureException) {
                     Log.d(Constants.TAG, "onError: ${exception.message}",exception)

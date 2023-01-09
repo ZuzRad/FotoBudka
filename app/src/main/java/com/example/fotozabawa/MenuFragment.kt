@@ -23,8 +23,8 @@ class MenuFragment : Fragment() {
     private val binding get() = _binding!!
     private val tryby = arrayOf("1 zdjęcie", "2 zdjęcia", "3 zdjęcia", "6 zdjęć")
     private val czas = arrayOf("1 sekunda", "3 sekundy", "5 sekund", "10 sekund")
-    private var tryb_selected = "1 zdjęcie"
-    private var czas_selected = "1 sekunda"
+    private var tryb_number = 0
+    private var czas_number = 0
     private var tryb_position = 0
     private var czas_position = 0
 
@@ -54,7 +54,7 @@ class MenuFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 spinner_tryb.setSelection(position)
                 spinner_tryb.setPrompt(tryby[position])
-                tryb_selected=tryby[position]
+                tryb_number=tryby[position].subSequence(0,1).toString().toInt()
                 tryb_position=position
 
             }
@@ -69,11 +69,13 @@ class MenuFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 spinner_czas.setSelection(position)
                 spinner_czas.setPrompt(czas[position])
-                czas_selected=czas[position]
+                czas_number=czas[position].subSequence(0,1).toString().toInt()
                 czas_position=position
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
+
         runBlocking(Dispatchers.IO) {
             czas_position = appDatabase.ustawieniaDao().getCzas_position()
             tryb_position = appDatabase.ustawieniaDao().getTryb_position()
@@ -84,13 +86,13 @@ class MenuFragment : Fragment() {
 
         val myButton = view.findViewById<Button>(R.id.button_start)
         myButton.setOnClickListener{
-            var ustawienie = Ustawienia("",0,"",0)
+            var ustawienie = Ustawienia(0,0,0,0)
             var callback = ""
             runBlocking(Dispatchers.IO) {
                 appDatabase.ustawieniaDao().deleteAll()
-                ustawienie = Ustawienia(czas_selected,czas_position,tryb_selected,tryb_position)
+                ustawienie = Ustawienia(czas_number,czas_position,tryb_number,tryb_position)
                 appDatabase.ustawieniaDao().insert(ustawienie)
-                callback = appDatabase.ustawieniaDao().getCzas().subSequence(0,1).toString()
+                callback = czas_number.toString()
             }
             Toast.makeText(requireContext(), callback, Toast.LENGTH_SHORT).show()
             val fragment : Fragment = StronaGlownaFragment()

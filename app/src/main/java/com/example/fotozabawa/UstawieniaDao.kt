@@ -5,13 +5,13 @@ import androidx.room.*
 @Dao
 interface UstawieniaDao {
     @Query("SELECT czas FROM ustawienia")
-    fun getCzas(): String
+    suspend fun getCzas(): Int
 
     @Query("SELECT czas_position FROM ustawienia")
     fun getCzas_position(): Int
 
     @Query("SELECT tryb FROM ustawienia")
-    fun getTryb(): String
+    suspend fun getTryb(): Int
 
     @Query("SELECT tryb_position FROM ustawienia")
     fun getTryb_position(): Int
