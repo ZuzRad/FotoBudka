@@ -36,6 +36,9 @@ class StronaGlownaFragment : Fragment() {
     private val binding get() = _binding!!
     private var imageCapture: ImageCapture? = null
     private lateinit var outputDirectory: File
+    private var list_paths = arrayListOf<String>()
+    var test = ""
+
 
 
 
@@ -76,18 +79,7 @@ class StronaGlownaFragment : Fragment() {
                     var czas_number = async { appDatabase.ustawieniaDao().getCzas() }
                     var tryb_number = async { appDatabase.ustawieniaDao().getTryb() }
 
-//<----------Tutaj wydaje się dźwięk odliczenia do zaczęcia serii zdjęć---------->//
 
-//                    runBlocking {
-//                        for (x in 1..5) {
-//                            delay(1000)
-//                            toneGen1.startTone(ToneGenerator.TONE_CDMA_INTERCEPT, 150)
-//                        }
-//                        delay(1000)
-//                        toneGen1.startTone(ToneGenerator.TONE_CDMA_INTERCEPT, 300)
-//                        //<----------A tu się kończy---------->//
-//
-//                    }
                     launch {
        //<----------Iteracje, zdjęcia, beepy---------->//
 
@@ -111,6 +103,7 @@ class StronaGlownaFragment : Fragment() {
 
         val myButton = view.findViewById<Button>(R.id.button_menu)
         myButton.setOnClickListener {
+
             val fragment: Fragment = MenuFragment()
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
@@ -119,6 +112,8 @@ class StronaGlownaFragment : Fragment() {
             fragmentTransaction.commit()
             requireActivity().title = "Menu"
         }
+
+
     }
 
     private fun getOutputDirectory(): File{
@@ -144,7 +139,9 @@ class StronaGlownaFragment : Fragment() {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
                     val msg = "photo saved"
-                    //Toast.makeText(requireActivity(), "$msg $savedUri", Toast.LENGTH_LONG).show()
+                   // Toast.makeText(requireActivity(), "$msg $savedUri", Toast.LENGTH_LONG).show()
+                    list_paths.add(savedUri.toString())
+                    //test=savedUri.toString()
                 }
                 override fun onError(exception: ImageCaptureException) {
                     Log.d(Constants.TAG, "onError: ${exception.message}",exception)
