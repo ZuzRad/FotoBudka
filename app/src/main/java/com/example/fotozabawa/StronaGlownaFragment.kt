@@ -37,7 +37,6 @@ class StronaGlownaFragment : Fragment() {
     private var imageCapture: ImageCapture? = null
     private lateinit var outputDirectory: File
     private var list_paths = arrayListOf<String>()
-    var test = ""
 
 
 
@@ -99,6 +98,8 @@ class StronaGlownaFragment : Fragment() {
                 }
 
             }
+            //wysyłanie na serwer
+            
         }
 
         val myButton = view.findViewById<Button>(R.id.button_menu)
@@ -139,9 +140,8 @@ class StronaGlownaFragment : Fragment() {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
                     val msg = "photo saved"
-                   // Toast.makeText(requireActivity(), "$msg $savedUri", Toast.LENGTH_LONG).show()
                     list_paths.add(savedUri.toString())
-                    //test=savedUri.toString()
+
                 }
                 override fun onError(exception: ImageCaptureException) {
                     Log.d(Constants.TAG, "onError: ${exception.message}",exception)
