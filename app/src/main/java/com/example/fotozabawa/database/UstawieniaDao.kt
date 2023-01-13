@@ -1,6 +1,7 @@
-package com.example.fotozabawa
+package com.example.fotozabawa.database
 
 import androidx.room.*
+import com.example.fotozabawa.model.Ustawienia
 
 @Dao
 interface UstawieniaDao {

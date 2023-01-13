@@ -1,4 +1,4 @@
-package com.example.fotozabawa
+package com.example.fotozabawa.fragments
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -6,8 +6,6 @@ import android.media.AudioManager
 import android.media.ToneGenerator
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,13 +22,27 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.fotozabawa.databinding.FragmentStronaGlownaBinding
 import kotlinx.coroutines.*
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.concurrent.schedule
+import androidx.core.net.toUri
+import com.example.fotozabawa.database.AppDatabase
+import com.example.fotozabawa.Constants
+import com.example.fotozabawa.R
+import com.example.fotozabawa.upload.MyAPI
+import com.example.fotozabawa.upload.UploadRequestBody
+import com.example.fotozabawa.upload.UploadResponse
+import com.example.fotozabawa.upload.getFileName
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
-
-class StronaGlownaFragment : Fragment() {
+class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
     private lateinit var appDatabase: AppDatabase
     private var _binding: FragmentStronaGlownaBinding? = null
     private val binding get() = _binding!!
@@ -98,13 +110,15 @@ class StronaGlownaFragment : Fragment() {
                 }
 
             }
-            //wysyłanie na serwer
-            
+
+            Toast.makeText(requireContext(), list_paths.toString(), Toast.LENGTH_SHORT).show() // w tym miejscu nie ma jeszcze danych w liście
+            //uploadImages()
         }
 
         val myButton = view.findViewById<Button>(R.id.button_menu)
         myButton.setOnClickListener {
-
+            Toast.makeText(requireContext(), list_paths.toString(), Toast.LENGTH_SHORT).show()
+           // uploadImages() //do testu zakomentować przejście do menu i odpalis wysyłanie zdjęcia
             val fragment: Fragment = MenuFragment()
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
@@ -116,6 +130,54 @@ class StronaGlownaFragment : Fragment() {
 
 
     }
+
+
+    override fun onProgressUpdate(percentage: Int) {
+        TODO("Not yet implemented")
+    }
+
+    private fun uploadImages(){
+       // for(item in list_paths){
+            if(list_paths[0] == null){
+                Toast.makeText(requireContext(), "plik jest nullem", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            var name = list_paths[0].subSequence(64,list_paths[0].length)
+            val parcelFileDescriptor = requireContext().contentResolver.openFileDescriptor(list_paths[0].toUri(),"r",null) ?:return
+            val file = File(requireContext().cacheDir, requireContext().contentResolver.getFileName(list_paths[0].toUri())) //w tym miejscu się wywala... nie ma takiego pliku
+            val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
+            val outputStream = FileOutputStream(file)
+            inputStream.copyTo(outputStream)
+
+            val body = UploadRequestBody(file, "image", this)
+
+            MyAPI().uploadImage(
+                RequestBody.create(MediaType.parse("multipart/form-data"), "folder1"),
+                MultipartBody.Part.createFormData("image1", file.name, body),
+                MultipartBody.Part.createFormData("image2", file.name, body),
+                MultipartBody.Part.createFormData("image3", file.name, body),
+                MultipartBody.Part.createFormData("image4", file.name, body),
+                MultipartBody.Part.createFormData("image5", file.name, body),
+                MultipartBody.Part.createFormData("image6", file.name, body),
+                RequestBody.create(MediaType.parse("multipart/form-data"), "space"),
+            ).enqueue(object: Callback<UploadResponse>{
+                override fun onResponse(
+                    call: Call<UploadResponse>,
+                    response: Response<UploadResponse>
+                ) {
+                    Toast.makeText(requireContext(), "wysłano pliki", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Błąd", Toast.LENGTH_SHORT).show()
+                }
+
+            })
+
+       // }
+    }
+
 
     private fun getOutputDirectory(): File{
         val mediaDir = activity?.externalMediaDirs?.firstOrNull()?.let{ mFile ->
@@ -139,7 +201,6 @@ class StronaGlownaFragment : Fragment() {
             object :ImageCapture.OnImageSavedCallback{
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
-                    val msg = "photo saved"
                     list_paths.add(savedUri.toString())
 
                 }

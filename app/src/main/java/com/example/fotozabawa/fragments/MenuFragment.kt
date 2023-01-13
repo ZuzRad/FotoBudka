@@ -1,4 +1,4 @@
-package com.example.fotozabawa
+package com.example.fotozabawa.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
 import com.example.fotozabawa.databinding.FragmentMenuBinding
 import androidx.fragment.app.Fragment
+import com.example.fotozabawa.database.AppDatabase
+import com.example.fotozabawa.R
+import com.example.fotozabawa.model.Ustawienia
 import kotlinx.coroutines.*
-import kotlinx.coroutines.NonDisposableHandle.parent
 
 
 class MenuFragment : Fragment() {
