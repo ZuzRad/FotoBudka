@@ -118,14 +118,14 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         val myButton = view.findViewById<Button>(R.id.button_menu)
         myButton.setOnClickListener {
             Toast.makeText(requireContext(), list_paths.toString(), Toast.LENGTH_SHORT).show()
-           // uploadImages() //do testu zakomentować przejście do menu i odpalis wysyłanie zdjęcia
-            val fragment: Fragment = MenuFragment()
-            val fragmentManager = requireActivity().supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.frameLayout, fragment)
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commit()
-            requireActivity().title = "Menu"
+            uploadImages() //do testu zakomentować przejście do menu i odpalis wysyłanie zdjęcia
+//            val fragment: Fragment = MenuFragment()
+//            val fragmentManager = requireActivity().supportFragmentManager
+//            val fragmentTransaction = fragmentManager.beginTransaction()
+//            fragmentTransaction.replace(R.id.frameLayout, fragment)
+//            fragmentTransaction.addToBackStack(null)
+//            fragmentTransaction.commit()
+//            requireActivity().title = "Menu"
         }
 
 
@@ -143,11 +143,14 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                 return
             }
 
-            var name = list_paths[0].subSequence(64,list_paths[0].length)
+            var name = list_paths[0].subSequence(69,list_paths[0].length)
             val parcelFileDescriptor = requireContext().contentResolver.openFileDescriptor(list_paths[0].toUri(),"r",null) ?:return
-            val file = File(requireContext().cacheDir, requireContext().contentResolver.getFileName(list_paths[0].toUri())) //w tym miejscu się wywala... nie ma takiego pliku
+            val file = File(requireContext().cacheDir, name.toString()) //w tym miejscu się wywala... nie ma takiego pliku
             val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
+            Log.d("<-------URI--------> ",list_paths[0])
+            Log.d("<-------FILE-------->",file.toString()+" uri")
             val outputStream = FileOutputStream(file)
+
             inputStream.copyTo(outputStream)
 
             val body = UploadRequestBody(file, "image", this)
@@ -160,7 +163,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                 MultipartBody.Part.createFormData("image4", file.name, body),
                 MultipartBody.Part.createFormData("image5", file.name, body),
                 MultipartBody.Part.createFormData("image6", file.name, body),
-                RequestBody.create(MediaType.parse("multipart/form-data"), "space"),
+                RequestBody.create(MediaType.parse("multipart/form-data"), "space")
             ).enqueue(object: Callback<UploadResponse>{
                 override fun onResponse(
                     call: Call<UploadResponse>,
@@ -170,7 +173,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                 }
 
                 override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
-                    Toast.makeText(requireContext(), "Błąd", Toast.LENGTH_SHORT).show()
+                  Log.d("BŁĄD---------      ",t.message!!)
                 }
 
             })
