@@ -144,7 +144,6 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
         val myButton = view.findViewById<Button>(R.id.button_menu)
         myButton.setOnClickListener {
-            //Toast.makeText(requireContext(), list_paths.toString(), Toast.LENGTH_SHORT).show()
 
             val fragment: Fragment = MenuFragment()
             val fragmentManager = requireActivity().supportFragmentManager

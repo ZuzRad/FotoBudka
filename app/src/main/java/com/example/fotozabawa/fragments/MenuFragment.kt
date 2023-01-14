@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.Toast
 import com.example.fotozabawa.databinding.FragmentMenuBinding
@@ -43,6 +44,10 @@ class MenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val img1 = view.findViewById<ImageView>(R.id.imageView_baner1)
+        img1.setImageResource(R.drawable.space)
+
 
         //----------------------lista--------------------
         val spinner_tryb = view.findViewById<Spinner>(R.id.spinner_tryb)
