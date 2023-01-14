@@ -28,6 +28,7 @@ import androidx.core.net.toUri
 import com.example.fotozabawa.database.AppDatabase
 import com.example.fotozabawa.Constants
 import com.example.fotozabawa.R
+import com.example.fotozabawa.model.Ustawienia
 import com.example.fotozabawa.upload.MyAPI
 import com.example.fotozabawa.upload.UploadRequestBody
 import com.example.fotozabawa.upload.UploadResponse
@@ -70,6 +71,13 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
         if(allPermissionGranted()){
             startCamera()
+
+            //if(appDatabase.ustawieniaDao().getCzas()==null)
+            runBlocking(Dispatchers.IO) { //narazie do testowania połączenia z serwerm, potem zmienić żeby po starcie aplikacji były to wartości startowe
+                appDatabase.ustawieniaDao().deleteAll()
+                var ustawienie = Ustawienia(1,0,1,0)
+                appDatabase.ustawieniaDao().insert(ustawienie)
+            }
         }else{
             Toast.makeText(activity?.applicationContext,"Permissions requested", Toast.LENGTH_SHORT).show()
             activity?.let {
@@ -118,7 +126,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         val myButton = view.findViewById<Button>(R.id.button_menu)
         myButton.setOnClickListener {
             Toast.makeText(requireContext(), list_paths.toString(), Toast.LENGTH_SHORT).show()
-            uploadImages() //do testu zakomentować przejście do menu i odpalis wysyłanie zdjęcia
+           uploadImages() //do testu zakomentować przejście do menu i odpalis wysyłanie zdjęcia
 //            val fragment: Fragment = MenuFragment()
 //            val fragmentManager = requireActivity().supportFragmentManager
 //            val fragmentTransaction = fragmentManager.beginTransaction()
@@ -169,6 +177,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                     call: Call<UploadResponse>,
                     response: Response<UploadResponse>
                 ) {
+                    Log.d("BŁĄD---------      ","UDAŁO SIĘ!!!!!!!!!!!!!!!!!!!!!")
                     Toast.makeText(requireContext(), "wysłano pliki", Toast.LENGTH_SHORT).show()
                 }
 
