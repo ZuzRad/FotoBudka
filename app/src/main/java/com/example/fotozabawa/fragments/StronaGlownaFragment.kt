@@ -26,6 +26,7 @@ import com.example.fotozabawa.Constants
 import com.example.fotozabawa.R
 import com.example.fotozabawa.database.AppDatabase
 import com.example.fotozabawa.databinding.FragmentStronaGlownaBinding
+import com.example.fotozabawa.model.Id_folder
 import com.example.fotozabawa.model.Ustawienia
 import com.example.fotozabawa.upload.MyAPI
 import com.example.fotozabawa.upload.UploadRequestBody
@@ -80,6 +81,11 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                             appDatabase.ustawieniaDao().insert(ustawienie)
                         }
                     }
+                    if(appDatabase.id_folderDao().exists()==false){
+                        runBlocking (Dispatchers.IO){
+                            appDatabase.id_folderDao().insert(Id_folder(1))
+                        }
+                    }
                 }
             }
 
@@ -127,8 +133,11 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
             Handler().postDelayed( {
                 uploadImages()
-                
-            }, 10000)
+                runBlocking (Dispatchers.IO){
+                    var x = appDatabase.id_folderDao().getiD()
+                    appDatabase.id_folderDao().update(x + 1)
+                }
+            }, 5000)
 
 
         }
@@ -306,7 +315,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
         runBlocking(Dispatchers.IO) {
             launch {
-                var id = async{appDatabase.ustawieniaDao().getiD()}
+                var id = async{appDatabase.id_folderDao().getiD()}
                 MyAPI().uploadImage(
                     RequestBody.create(
                         MediaType.parse("multipart/form-data"),
