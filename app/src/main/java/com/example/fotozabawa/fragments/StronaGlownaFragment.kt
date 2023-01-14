@@ -164,7 +164,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         var size = list_paths.size
 
         if(size==1){
-            var name = list_paths[0].subSequence(69, list_paths[0].length)
+            val name = list_paths[0].subSequence(69, list_paths[0].length)
             val parcelFileDescriptor = requireContext().contentResolver.openFileDescriptor(list_paths[0].toUri(), "r", null) ?: return
 
             image1= File(requireContext().cacheDir, name.toString())
@@ -198,10 +198,10 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
             inputStream6.copyTo(outputStream6)
         }
         else if(size == 2){
-            var name1 = list_paths[0].subSequence(69, list_paths[0].length)
+            val name1 = list_paths[0].subSequence(69, list_paths[0].length)
             val parcelFileDescriptor1 = requireContext().contentResolver.openFileDescriptor(list_paths[0].toUri(), "r", null) ?: return
 
-            var name2 = list_paths[1].subSequence(69, list_paths[1].length)
+            val name2 = list_paths[1].subSequence(69, list_paths[1].length)
             val parcelFileDescriptor2 = requireContext().contentResolver.openFileDescriptor(list_paths[1].toUri(), "r", null) ?: return
 
             image1= File(requireContext().cacheDir, name1.toString())
@@ -234,6 +234,95 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
             val outputStream6 = FileOutputStream(image6)
             inputStream6.copyTo(outputStream6)
         }
+        else if(size==3){
+            val name1 = list_paths[0].subSequence(69, list_paths[0].length)
+            val parcelFileDescriptor1 = requireContext().contentResolver.openFileDescriptor(list_paths[0].toUri(), "r", null) ?: return
+
+            val name2 = list_paths[1].subSequence(69, list_paths[1].length)
+            val parcelFileDescriptor2 = requireContext().contentResolver.openFileDescriptor(list_paths[1].toUri(), "r", null) ?: return
+
+            val name3 = list_paths[2].subSequence(69, list_paths[2].length)
+            val parcelFileDescriptor3 = requireContext().contentResolver.openFileDescriptor(list_paths[2].toUri(), "r", null) ?: return
+
+            image1= File(requireContext().cacheDir, name1.toString())
+            val inputStream1 = FileInputStream(parcelFileDescriptor1.fileDescriptor)
+            val outputStream1 = FileOutputStream(image1)
+            inputStream1.copyTo(outputStream1)
+
+            image2= File(requireContext().cacheDir, name1.toString())
+            val inputStream2 = FileInputStream(parcelFileDescriptor1.fileDescriptor)
+            val outputStream2 = FileOutputStream(image2)
+            inputStream2.copyTo(outputStream2)
+
+            image3= File(requireContext().cacheDir, name2.toString())
+            val inputStream3 = FileInputStream(parcelFileDescriptor2.fileDescriptor)
+            val outputStream3 = FileOutputStream(image3)
+            inputStream3.copyTo(outputStream3)
+
+            image4= File(requireContext().cacheDir, name2.toString())
+            val inputStream4 = FileInputStream(parcelFileDescriptor2.fileDescriptor)
+            val outputStream4 = FileOutputStream(image4)
+            inputStream4.copyTo(outputStream4)
+
+            image5= File(requireContext().cacheDir, name3.toString())
+            val inputStream5 = FileInputStream(parcelFileDescriptor3.fileDescriptor)
+            val outputStream5 = FileOutputStream(image5)
+            inputStream5.copyTo(outputStream5)
+
+            image6= File(requireContext().cacheDir, name3.toString())
+            val inputStream6 = FileInputStream(parcelFileDescriptor3.fileDescriptor)
+            val outputStream6 = FileOutputStream(image6)
+            inputStream6.copyTo(outputStream6)
+        }
+        else if(size==6){
+            val name1 = list_paths[0].subSequence(69, list_paths[0].length)
+            val parcelFileDescriptor1 = requireContext().contentResolver.openFileDescriptor(list_paths[0].toUri(), "r", null) ?: return
+
+            val name2 = list_paths[1].subSequence(69, list_paths[1].length)
+            val parcelFileDescriptor2 = requireContext().contentResolver.openFileDescriptor(list_paths[1].toUri(), "r", null) ?: return
+
+            val name3 = list_paths[2].subSequence(69, list_paths[2].length)
+            val parcelFileDescriptor3 = requireContext().contentResolver.openFileDescriptor(list_paths[2].toUri(), "r", null) ?: return
+
+            val name4 = list_paths[3].subSequence(69, list_paths[3].length)
+            val parcelFileDescriptor4 = requireContext().contentResolver.openFileDescriptor(list_paths[3].toUri(), "r", null) ?: return
+
+            val name5 = list_paths[4].subSequence(69, list_paths[4].length)
+            val parcelFileDescriptor5 = requireContext().contentResolver.openFileDescriptor(list_paths[4].toUri(), "r", null) ?: return
+
+            val name6 = list_paths[5].subSequence(69, list_paths[5].length)
+            val parcelFileDescriptor6 = requireContext().contentResolver.openFileDescriptor(list_paths[5].toUri(), "r", null) ?: return
+
+            image1= File(requireContext().cacheDir, name1.toString())
+            val inputStream1 = FileInputStream(parcelFileDescriptor1.fileDescriptor)
+            val outputStream1 = FileOutputStream(image1)
+            inputStream1.copyTo(outputStream1)
+
+            image2= File(requireContext().cacheDir, name2.toString())
+            val inputStream2 = FileInputStream(parcelFileDescriptor2.fileDescriptor)
+            val outputStream2 = FileOutputStream(image2)
+            inputStream2.copyTo(outputStream2)
+
+            image3= File(requireContext().cacheDir, name3.toString())
+            val inputStream3 = FileInputStream(parcelFileDescriptor3.fileDescriptor)
+            val outputStream3 = FileOutputStream(image3)
+            inputStream3.copyTo(outputStream3)
+
+            image4= File(requireContext().cacheDir, name4.toString())
+            val inputStream4 = FileInputStream(parcelFileDescriptor4.fileDescriptor)
+            val outputStream4 = FileOutputStream(image4)
+            inputStream4.copyTo(outputStream4)
+
+            image5= File(requireContext().cacheDir, name5.toString())
+            val inputStream5 = FileInputStream(parcelFileDescriptor5.fileDescriptor)
+            val outputStream5 = FileOutputStream(image5)
+            inputStream5.copyTo(outputStream5)
+
+            image6= File(requireContext().cacheDir, name6.toString())
+            val inputStream6 = FileInputStream(parcelFileDescriptor6.fileDescriptor)
+            val outputStream6 = FileOutputStream(image6)
+            inputStream6.copyTo(outputStream6)
+        }
 
 
 //        var name = list_paths[0].subSequence(69, list_paths[0].length)
@@ -251,6 +340,13 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
             val body4 = UploadRequestBody(image4, "image", this)
             val body5 = UploadRequestBody(image5, "image", this)
             val body6 = UploadRequestBody(image6, "image", this)
+
+        Log.d("Zdjęcie1---------------",image1.toString())
+        Log.d("Zdjęcie2---------------",image2.toString())
+        Log.d("Zdjęcie3---------------",image3.toString())
+        Log.d("Zdjęcie4---------------",image4.toString())
+        Log.d("Zdjęcie5---------------",image5.toString())
+        Log.d("Zdjęcie6---------------",image6.toString())
 
             MyAPI().uploadImage(
                 RequestBody.create(MediaType.parse("multipart/form-data"), "folder1"),
