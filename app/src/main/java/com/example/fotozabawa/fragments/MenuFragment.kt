@@ -24,7 +24,7 @@ class MenuFragment : Fragment() {
     private val binding get() = _binding!!
     private val tryby = arrayOf("1 zdjęcie", "2 zdjęcia", "3 zdjęcia", "6 zdjęć")
     private val czas = arrayOf("1 sekunda", "3 sekundy", "5 sekund", "10 sekund")
-    private val piosenka = arrayOf("1 piosenka","2 piosenka","3 piosenka","4 piosenka")
+    private val piosenka = arrayOf("Deja vu","Crab","Gandalf","Last Christmas")
     private var tryb_number = 0
     private var czas_number = 0
     private var tryb_position = 0
@@ -123,7 +123,6 @@ class MenuFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 spinner_piosenka.setSelection(position)
                 spinner_piosenka.setPrompt(piosenka[position])
-                piosenka_selected=piosenka[position].subSequence(0,1).toString().toInt()
                 piosenka_position=position
                 Toast.makeText(requireContext(), piosenka[position], Toast.LENGTH_SHORT).show()
             }
@@ -141,11 +140,11 @@ class MenuFragment : Fragment() {
 
         val myButton = view.findViewById<Button>(R.id.button_start)
         myButton.setOnClickListener{
-            var ustawienie = Ustawienia(0,0,0,"space",0)
+            var ustawienie = Ustawienia(0,0,0,0,"space",0)
 
             runBlocking(Dispatchers.IO) {
                 appDatabase.ustawieniaDao().deleteAll()
-                ustawienie = Ustawienia(czas_number,czas_position,tryb_number,banner_selected,tryb_position)
+                ustawienie = Ustawienia(czas_number,czas_position,piosenka_position,tryb_number,banner_selected,tryb_position)
                 appDatabase.ustawieniaDao().insert(ustawienie)
             }
 

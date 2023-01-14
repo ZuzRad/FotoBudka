@@ -8,6 +8,7 @@ import android.media.ToneGenerator
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.provider.MediaStore.Audio.Media
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -81,7 +82,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                     if (appDatabase.ustawieniaDao().exists()==false) {
                         runBlocking(Dispatchers.IO) { //narazie do testowania połączenia z serwerm, potem zmienić żeby po starcie aplikacji były to wartości startowe
                             appDatabase.ustawieniaDao().deleteAll()
-                            var ustawienie = Ustawienia(1, 0, 1, "space",0)
+                            var ustawienie = Ustawienia(1, 0, 1,0, "space",0)
                             appDatabase.ustawieniaDao().insert(ustawienie)
                         }
                     }
@@ -146,6 +147,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                     appDatabase.id_folderDao().update(x + 1)
                 }
                 session=false
+                pauseAudio()
             }, 5000)
 
         //}
@@ -168,13 +170,19 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
 
     fun playAudio(){
-        val audioUrl="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-        mediaPlayer = MediaPlayer()
-        mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+        var position = 0
+        runBlocking (Dispatchers.IO){ position = appDatabase.ustawieniaDao().getPiosenka_position() }
+        if(position==1){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.deja_vu_chorus)}
+        else if(position==2){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.crab)}
+        else if(position==3){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.gandalf)}
+        else if(position==4){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.wham_last_christmas)}
 
+//        mediaPlayer = MediaPlayer()
+//        mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+        mediaPlayer = MediaPlayer.create(requireContext(),R.raw.deja_vu_chorus)
         try{
-            mediaPlayer!!.setDataSource(audioUrl)
-            mediaPlayer!!.prepare()
+            //mediaPlayer!!.setDataSource(audioUrl)
+            //mediaPlayer!!.prepare()
             mediaPlayer!!.start()
         }catch(e: IOException){
             e.printStackTrace()
@@ -183,7 +191,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         Toast.makeText(requireContext(),"Audio started playing",Toast.LENGTH_SHORT).show()
     }
 
-    fun pauseAduio(){
+    fun pauseAudio(){
         if(mediaPlayer!!.isPlaying){
             mediaPlayer!!.stop()
             mediaPlayer!!.reset()
