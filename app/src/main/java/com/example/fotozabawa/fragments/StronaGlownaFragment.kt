@@ -106,21 +106,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 1000)
 //        if(session==false){
         val buttonStart = view.findViewById<Button>(R.id.button_start)
-        fun playAudio(){
-            val audioUrl="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-            mediaPlayer = MediaPlayer()
-            mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
 
-            try{
-                mediaPlayer!!.setDataSource(audioUrl)
-                mediaPlayer!!.prepare()
-                mediaPlayer!!.start()
-            }catch(e: IOException){
-                e.printStackTrace()
-            }
-
-            Toast.makeText(requireContext(),"Audio started playing",Toast.LENGTH_SHORT).show()
-        }
 
 //            session=true
         buttonStart.setOnClickListener {
@@ -180,6 +166,32 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
     }
 
+
+    fun playAudio(){
+        val audioUrl="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+        mediaPlayer = MediaPlayer()
+        mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+
+        try{
+            mediaPlayer!!.setDataSource(audioUrl)
+            mediaPlayer!!.prepare()
+            mediaPlayer!!.start()
+        }catch(e: IOException){
+            e.printStackTrace()
+        }
+
+        Toast.makeText(requireContext(),"Audio started playing",Toast.LENGTH_SHORT).show()
+    }
+
+    fun pauseAduio(){
+        if(mediaPlayer!!.isPlaying){
+            mediaPlayer!!.stop()
+            mediaPlayer!!.reset()
+            mediaPlayer!!.release()
+        }else{
+            Toast.makeText(requireContext(), "Audio has not played", Toast.LENGTH_LONG).show()
+        }
+    }
 
     override fun onProgressUpdate(percentage: Int) {
 
