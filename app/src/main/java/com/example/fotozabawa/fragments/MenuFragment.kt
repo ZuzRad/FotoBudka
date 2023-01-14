@@ -47,6 +47,16 @@ class MenuFragment : Fragment() {
 
         val img1 = view.findViewById<ImageView>(R.id.imageView_baner1)
         img1.setImageResource(R.drawable.space)
+        val img2 = view.findViewById<ImageView>(R.id.imageView_baner2)
+        img2.setImageResource(R.drawable.space)
+        val img3 = view.findViewById<ImageView>(R.id.imageView_baner3)
+        img3.setImageResource(R.drawable.space)
+        val img4 = view.findViewById<ImageView>(R.id.imageView_baner4)
+        img4.setImageResource(R.drawable.space)
+        val img5 = view.findViewById<ImageView>(R.id.imageView_baner5)
+        img5.setImageResource(R.drawable.space)
+        val img6 = view.findViewById<ImageView>(R.id.imageView_baner6)
+        img6.setImageResource(R.drawable.space)
 
 
         //----------------------lista--------------------
