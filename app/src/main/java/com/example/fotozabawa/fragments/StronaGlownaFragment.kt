@@ -6,6 +6,7 @@ import android.media.AudioManager
 import android.media.ToneGenerator
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,20 +20,17 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import com.example.fotozabawa.databinding.FragmentStronaGlownaBinding
-import kotlinx.coroutines.*
-import java.text.SimpleDateFormat
-import java.util.*
 import androidx.core.net.toUri
-import com.example.fotozabawa.database.AppDatabase
+import androidx.fragment.app.Fragment
 import com.example.fotozabawa.Constants
 import com.example.fotozabawa.R
+import com.example.fotozabawa.database.AppDatabase
+import com.example.fotozabawa.databinding.FragmentStronaGlownaBinding
 import com.example.fotozabawa.model.Ustawienia
 import com.example.fotozabawa.upload.MyAPI
 import com.example.fotozabawa.upload.UploadRequestBody
 import com.example.fotozabawa.upload.UploadResponse
-import com.example.fotozabawa.upload.getFileName
+import kotlinx.coroutines.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -42,6 +40,8 @@ import retrofit2.Response
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
     private lateinit var appDatabase: AppDatabase
@@ -71,13 +71,18 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
         if(allPermissionGranted()){
             startCamera()
-
-            //if(appDatabase.ustawieniaDao().getCzas()==null)
-            runBlocking(Dispatchers.IO) { //narazie do testowania połączenia z serwerm, potem zmienić żeby po starcie aplikacji były to wartości startowe
-                appDatabase.ustawieniaDao().deleteAll()
-                var ustawienie = Ustawienia(1,0,1,0)
-                appDatabase.ustawieniaDao().insert(ustawienie)
+            runBlocking(Dispatchers.IO) {
+                launch {
+                    if (appDatabase.ustawieniaDao().exists()==false) {
+                        runBlocking(Dispatchers.IO) { //narazie do testowania połączenia z serwerm, potem zmienić żeby po starcie aplikacji były to wartości startowe
+                            appDatabase.ustawieniaDao().deleteAll()
+                            var ustawienie = Ustawienia(1, 0, 1, 0)
+                            appDatabase.ustawieniaDao().insert(ustawienie)
+                        }
+                    }
+                }
             }
+
         }else{
             Toast.makeText(activity?.applicationContext,"Permissions requested", Toast.LENGTH_SHORT).show()
             activity?.let {
@@ -119,21 +124,25 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
             }
 
-            Toast.makeText(requireContext(), list_paths.toString(), Toast.LENGTH_SHORT).show() // w tym miejscu nie ma jeszcze danych w liście
-            //uploadImages()
+            Handler().postDelayed( {
+                Toast.makeText(requireContext(), list_paths.toString(), Toast.LENGTH_SHORT).show()
+                uploadImages()
+            }, 3000)
+
+
         }
 
         val myButton = view.findViewById<Button>(R.id.button_menu)
         myButton.setOnClickListener {
             Toast.makeText(requireContext(), list_paths.toString(), Toast.LENGTH_SHORT).show()
-           uploadImages() //do testu zakomentować przejście do menu i odpalis wysyłanie zdjęcia
-//            val fragment: Fragment = MenuFragment()
-//            val fragmentManager = requireActivity().supportFragmentManager
-//            val fragmentTransaction = fragmentManager.beginTransaction()
-//            fragmentTransaction.replace(R.id.frameLayout, fragment)
-//            fragmentTransaction.addToBackStack(null)
-//            fragmentTransaction.commit()
-//            requireActivity().title = "Menu"
+
+            val fragment: Fragment = MenuFragment()
+            val fragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.frameLayout, fragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+            requireActivity().title = "Menu"
         }
 
 
@@ -144,33 +153,113 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         TODO("Not yet implemented")
     }
 
+
     private fun uploadImages(){
-       // for(item in list_paths){
-            if(list_paths[0] == null){
-                Toast.makeText(requireContext(), "plik jest nullem", Toast.LENGTH_SHORT).show()
-                return
-            }
+        var image1 :File = File("")
+        var image2 :File = File("")
+        var image3 :File = File("")
+        var image4 :File = File("")
+        var image5 :File = File("")
+        var image6 :File = File("")
+        var size = list_paths.size
 
-            var name = list_paths[0].subSequence(69,list_paths[0].length)
-            val parcelFileDescriptor = requireContext().contentResolver.openFileDescriptor(list_paths[0].toUri(),"r",null) ?:return
-            val file = File(requireContext().cacheDir, name.toString()) //w tym miejscu się wywala... nie ma takiego pliku
-            val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
-            Log.d("<-------URI--------> ",list_paths[0])
-            Log.d("<-------FILE-------->",file.toString()+" uri")
-            val outputStream = FileOutputStream(file)
+        if(size==1){
+            var name = list_paths[0].subSequence(69, list_paths[0].length)
+            val parcelFileDescriptor = requireContext().contentResolver.openFileDescriptor(list_paths[0].toUri(), "r", null) ?: return
 
-            inputStream.copyTo(outputStream)
+            image1= File(requireContext().cacheDir, name.toString())
+            val inputStream1 = FileInputStream(parcelFileDescriptor.fileDescriptor)
+            val outputStream1 = FileOutputStream(image1)
+            inputStream1.copyTo(outputStream1)
 
-            val body = UploadRequestBody(file, "image", this)
+            image2= File(requireContext().cacheDir, name.toString())
+            val inputStream2 = FileInputStream(parcelFileDescriptor.fileDescriptor)
+            val outputStream2 = FileOutputStream(image2)
+            inputStream2.copyTo(outputStream2)
+
+            image3= File(requireContext().cacheDir, name.toString())
+            val inputStream3 = FileInputStream(parcelFileDescriptor.fileDescriptor)
+            val outputStream3 = FileOutputStream(image3)
+            inputStream3.copyTo(outputStream3)
+
+            image4= File(requireContext().cacheDir, name.toString())
+            val inputStream4 = FileInputStream(parcelFileDescriptor.fileDescriptor)
+            val outputStream4 = FileOutputStream(image4)
+            inputStream4.copyTo(outputStream4)
+
+            image5= File(requireContext().cacheDir, name.toString())
+            val inputStream5 = FileInputStream(parcelFileDescriptor.fileDescriptor)
+            val outputStream5 = FileOutputStream(image5)
+            inputStream5.copyTo(outputStream5)
+
+            image6= File(requireContext().cacheDir, name.toString())
+            val inputStream6 = FileInputStream(parcelFileDescriptor.fileDescriptor)
+            val outputStream6 = FileOutputStream(image6)
+            inputStream6.copyTo(outputStream6)
+        }
+        else if(size == 2){
+            var name1 = list_paths[0].subSequence(69, list_paths[0].length)
+            val parcelFileDescriptor1 = requireContext().contentResolver.openFileDescriptor(list_paths[0].toUri(), "r", null) ?: return
+
+            var name2 = list_paths[1].subSequence(69, list_paths[1].length)
+            val parcelFileDescriptor2 = requireContext().contentResolver.openFileDescriptor(list_paths[1].toUri(), "r", null) ?: return
+
+            image1= File(requireContext().cacheDir, name1.toString())
+            val inputStream1 = FileInputStream(parcelFileDescriptor1.fileDescriptor)
+            val outputStream1 = FileOutputStream(image1)
+            inputStream1.copyTo(outputStream1)
+
+            image2= File(requireContext().cacheDir, name1.toString())
+            val inputStream2 = FileInputStream(parcelFileDescriptor1.fileDescriptor)
+            val outputStream2 = FileOutputStream(image2)
+            inputStream2.copyTo(outputStream2)
+
+            image3= File(requireContext().cacheDir, name1.toString())
+            val inputStream3 = FileInputStream(parcelFileDescriptor1.fileDescriptor)
+            val outputStream3 = FileOutputStream(image3)
+            inputStream3.copyTo(outputStream3)
+
+            image4= File(requireContext().cacheDir, name2.toString())
+            val inputStream4 = FileInputStream(parcelFileDescriptor2.fileDescriptor)
+            val outputStream4 = FileOutputStream(image4)
+            inputStream4.copyTo(outputStream4)
+
+            image5= File(requireContext().cacheDir, name2.toString())
+            val inputStream5 = FileInputStream(parcelFileDescriptor2.fileDescriptor)
+            val outputStream5 = FileOutputStream(image5)
+            inputStream5.copyTo(outputStream5)
+
+            image6= File(requireContext().cacheDir, name2.toString())
+            val inputStream6 = FileInputStream(parcelFileDescriptor2.fileDescriptor)
+            val outputStream6 = FileOutputStream(image6)
+            inputStream6.copyTo(outputStream6)
+        }
+
+
+//        var name = list_paths[0].subSequence(69, list_paths[0].length)
+//        val parcelFileDescriptor =
+//            requireContext().contentResolver.openFileDescriptor(list_paths[0].toUri(), "r", null) ?: return
+//        val file = File(requireContext().cacheDir, name.toString()) //w tym miejscu się wywala... nie ma takiego pliku
+//        val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
+//        val outputStream = FileOutputStream(file)
+//        inputStream.copyTo(outputStream)
+        //val body = UploadRequestBody(file, "image", this)
+
+            val body1 = UploadRequestBody(image1, "image", this)
+            val body2 = UploadRequestBody(image2, "image", this)
+            val body3 = UploadRequestBody(image3, "image", this)
+            val body4 = UploadRequestBody(image4, "image", this)
+            val body5 = UploadRequestBody(image5, "image", this)
+            val body6 = UploadRequestBody(image6, "image", this)
 
             MyAPI().uploadImage(
                 RequestBody.create(MediaType.parse("multipart/form-data"), "folder1"),
-                MultipartBody.Part.createFormData("image1", file.name, body),
-                MultipartBody.Part.createFormData("image2", file.name, body),
-                MultipartBody.Part.createFormData("image3", file.name, body),
-                MultipartBody.Part.createFormData("image4", file.name, body),
-                MultipartBody.Part.createFormData("image5", file.name, body),
-                MultipartBody.Part.createFormData("image6", file.name, body),
+                MultipartBody.Part.createFormData("image1", image1.name, body1),
+                MultipartBody.Part.createFormData("image2", image2.name, body2),
+                MultipartBody.Part.createFormData("image3", image3.name, body3),
+                MultipartBody.Part.createFormData("image4", image4.name, body4),
+                MultipartBody.Part.createFormData("image5", image5.name, body5),
+                MultipartBody.Part.createFormData("image6", image6.name, body6),
                 RequestBody.create(MediaType.parse("multipart/form-data"), "space")
             ).enqueue(object: Callback<UploadResponse>{
                 override fun onResponse(

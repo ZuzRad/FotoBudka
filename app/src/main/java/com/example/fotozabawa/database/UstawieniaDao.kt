@@ -17,6 +17,9 @@ interface UstawieniaDao {
     @Query("SELECT tryb_position FROM ustawienia")
     fun getTryb_position(): Int
 
+    @Query("SELECT EXISTS (SELECT 1 FROM ustawienia)")
+    fun exists(): Boolean
+
     @Insert
     suspend fun insert(ustawienia: Ustawienia)
 
