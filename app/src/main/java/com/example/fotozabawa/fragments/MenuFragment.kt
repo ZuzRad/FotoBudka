@@ -24,11 +24,14 @@ class MenuFragment : Fragment() {
     private val binding get() = _binding!!
     private val tryby = arrayOf("1 zdjęcie", "2 zdjęcia", "3 zdjęcia", "6 zdjęć")
     private val czas = arrayOf("1 sekunda", "3 sekundy", "5 sekund", "10 sekund")
+    private val piosenka = arrayOf("1 piosenka","2 piosenka","3 piosenka","4 piosenka")
     private var tryb_number = 0
     private var czas_number = 0
     private var tryb_position = 0
     private var czas_position = 0
     private var banner_selected = "space"
+    private var piosenka_selected = 0
+    private var piosenka_position = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
@@ -108,6 +111,21 @@ class MenuFragment : Fragment() {
                 spinner_czas.setPrompt(czas[position])
                 czas_number=czas[position].subSequence(0,1).toString().toInt()
                 czas_position=position
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        val spinner_piosenka = view.findViewById<Spinner>(R.id.spinner_piosenka)
+        val adapter3 = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, piosenka)
+        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner_piosenka.adapter = adapter3
+        spinner_piosenka.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                spinner_piosenka.setSelection(position)
+                spinner_piosenka.setPrompt(piosenka[position])
+                piosenka_selected=piosenka[position].subSequence(0,1).toString().toInt()
+                piosenka_position=position
+                Toast.makeText(requireContext(), piosenka[position], Toast.LENGTH_SHORT).show()
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }

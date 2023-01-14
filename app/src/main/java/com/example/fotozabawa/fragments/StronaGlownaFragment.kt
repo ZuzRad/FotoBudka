@@ -3,6 +3,7 @@ package com.example.fotozabawa.fragments
 import android.Manifest
 import android.content.pm.PackageManager
 import android.media.AudioManager
+import android.media.MediaPlayer
 import android.media.ToneGenerator
 import android.net.Uri
 import android.os.Bundle
@@ -41,6 +42,7 @@ import retrofit2.Response
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,6 +54,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
     private lateinit var outputDirectory: File
     private var list_paths = arrayListOf<String>()
     private var session = false
+    var mediaPlayer: MediaPlayer?=null
 
 
 
@@ -103,9 +106,25 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 1000)
 //        if(session==false){
         val buttonStart = view.findViewById<Button>(R.id.button_start)
+        fun playAudio(){
+            val audioUrl="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+            mediaPlayer = MediaPlayer()
+            mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+
+            try{
+                mediaPlayer!!.setDataSource(audioUrl)
+                mediaPlayer!!.prepare()
+                mediaPlayer!!.start()
+            }catch(e: IOException){
+                e.printStackTrace()
+            }
+
+            Toast.makeText(requireContext(),"Audio started playing",Toast.LENGTH_SHORT).show()
+        }
 
 //            session=true
         buttonStart.setOnClickListener {
+            playAudio()
             list_paths.clear()
 
             runBlocking(Dispatchers.IO) {
