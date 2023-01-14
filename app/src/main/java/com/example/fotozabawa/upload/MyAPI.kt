@@ -27,7 +27,7 @@ interface MyAPI {
     companion object {
         operator fun invoke(): MyAPI {
             return Retrofit.Builder()//Handshake failed
-                .baseUrl("http://192.168.1.179:3000/") //do zmiany "http://10.10.10.118/ImageUploader/" 192.168.0.11
+                .baseUrl("http://192.168.0.11:3000/") //do zmiany "http://10.10.10.118/ImageUploader/" 192.168.0.11
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(MyAPI::class.java)

@@ -20,6 +20,10 @@ interface UstawieniaDao {
     @Query("SELECT EXISTS (SELECT 1 FROM ustawienia)")
     fun exists(): Boolean
 
+    @Query("SELECT _id FROM ustawienia")
+    fun getiD(): Int
+
+
     @Insert
     suspend fun insert(ustawienia: Ustawienia)
 

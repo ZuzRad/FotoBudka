@@ -127,6 +127,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
             Handler().postDelayed( {
                 uploadImages()
+                
             }, 10000)
 
 
@@ -150,7 +151,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
 
     override fun onProgressUpdate(percentage: Int) {
-        Toast.makeText(requireContext(), "HURRRRAYYYYYYY", Toast.LENGTH_SHORT).show()
+
     }
 
 
@@ -303,29 +304,37 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         Log.d("Zdjęcie5---------------",image5.toString())
         Log.d("Zdjęcie6---------------",image6.toString())
 
-            MyAPI().uploadImage(
-                RequestBody.create(MediaType.parse("multipart/form-data"), "folder1"),
-                MultipartBody.Part.createFormData("image1", image1.name, body1),
-                MultipartBody.Part.createFormData("image2", image2.name, body2),
-                MultipartBody.Part.createFormData("image3", image3.name, body3),
-                MultipartBody.Part.createFormData("image4", image4.name, body4),
-                MultipartBody.Part.createFormData("image5", image5.name, body5),
-                MultipartBody.Part.createFormData("image6", image6.name, body6),
-                RequestBody.create(MediaType.parse("multipart/form-data"), "space")
-            ).enqueue(object: Callback<UploadResponse>{
-                override fun onResponse(
-                    call: Call<UploadResponse>,
-                    response: Response<UploadResponse>
-                ) {
-                    Log.d("BŁĄD---------      ","UDAŁO SIĘ!!!!!!!!!!!!!!!!!!!!!")
-                    Toast.makeText(requireContext(), "wysłano pliki", Toast.LENGTH_SHORT).show()
-                }
+        runBlocking(Dispatchers.IO) {
+            launch {
+                var id = async{appDatabase.ustawieniaDao().getiD()}
+                MyAPI().uploadImage(
+                    RequestBody.create(
+                        MediaType.parse("multipart/form-data"),
+                        "folder" + id.await().toString()
+                    ),
+                    MultipartBody.Part.createFormData("image1", "image1.jpg", body1),
+                    MultipartBody.Part.createFormData("image2", "image2.jpg", body2),
+                    MultipartBody.Part.createFormData("image3", "image3.jpg", body3),
+                    MultipartBody.Part.createFormData("image4", "image4.jpg", body4),
+                    MultipartBody.Part.createFormData("image5", "image5.jpg", body5),
+                    MultipartBody.Part.createFormData("image6", "image6.jpg", body6),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), "space")
+                ).enqueue(object : Callback<UploadResponse> {
+                    override fun onResponse(
+                        call: Call<UploadResponse>,
+                        response: Response<UploadResponse>
+                    ) {
+                        Log.d("---------      ", "UDAŁO SIĘ!!!!!!!!!!!!!!!!!!!!!")
+                        Toast.makeText(requireContext(), "wysłano pliki", Toast.LENGTH_SHORT).show()
+                    }
 
-                override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
-                  Log.d("BŁĄD---------      ",t.message!!)
-                }
+                    override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
+                        Log.d("BŁĄD---------      ", t.message!!)
+                    }
 
-            })
+                })
+            }
+        }
 
        // }
     }
