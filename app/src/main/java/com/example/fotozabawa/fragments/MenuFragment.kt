@@ -28,6 +28,7 @@ class MenuFragment : Fragment() {
     private var czas_number = 0
     private var tryb_position = 0
     private var czas_position = 0
+    private var banner_selected = "space"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
@@ -47,16 +48,37 @@ class MenuFragment : Fragment() {
 
         val img1 = view.findViewById<ImageView>(R.id.imageView_baner1)
         img1.setImageResource(R.drawable.space)
+        img1.setOnClickListener{
+            banner_selected = "space"
+            Toast.makeText(requireContext(), "Wybrano baner: "+banner_selected, Toast.LENGTH_SHORT).show()
+        }
         val img2 = view.findViewById<ImageView>(R.id.imageView_baner2)
-        img2.setImageResource(R.drawable.space)
+        img2.setImageResource(R.drawable.megamind)
+        img2.setOnClickListener{
+            banner_selected = "megamind"
+            Toast.makeText(requireContext(), "Wybrano baner: "+banner_selected, Toast.LENGTH_SHORT).show()
+        }
         val img3 = view.findViewById<ImageView>(R.id.imageView_baner3)
         img3.setImageResource(R.drawable.space)
+        img3.setOnClickListener{banner_selected = "space"
+            Toast.makeText(requireContext(), "Wybrano baner: "+banner_selected, Toast.LENGTH_SHORT).show()
+        }
         val img4 = view.findViewById<ImageView>(R.id.imageView_baner4)
         img4.setImageResource(R.drawable.space)
+        img4.setOnClickListener{banner_selected = "space"
+            Toast.makeText(requireContext(), "Wybrano baner: "+banner_selected, Toast.LENGTH_SHORT).show()
+        }
         val img5 = view.findViewById<ImageView>(R.id.imageView_baner5)
         img5.setImageResource(R.drawable.space)
+        img5.setOnClickListener{banner_selected = "space"
+            Toast.makeText(requireContext(), "Wybrano baner: "+banner_selected, Toast.LENGTH_SHORT).show()
+        }
         val img6 = view.findViewById<ImageView>(R.id.imageView_baner6)
         img6.setImageResource(R.drawable.space)
+        img6.setOnClickListener{banner_selected = "space"
+            Toast.makeText(requireContext(), "Wybrano baner: "+banner_selected, Toast.LENGTH_SHORT).show()
+        }
+
 
 
         //----------------------lista--------------------
@@ -101,13 +123,12 @@ class MenuFragment : Fragment() {
 
         val myButton = view.findViewById<Button>(R.id.button_start)
         myButton.setOnClickListener{
-            var ustawienie = Ustawienia(0,0,0,0)
+            var ustawienie = Ustawienia(0,0,0,"space",0)
 
             runBlocking(Dispatchers.IO) {
                 appDatabase.ustawieniaDao().deleteAll()
-                ustawienie = Ustawienia(czas_number,czas_position,tryb_number,tryb_position)
+                ustawienie = Ustawienia(czas_number,czas_position,tryb_number,banner_selected,tryb_position)
                 appDatabase.ustawieniaDao().insert(ustawienie)
-
             }
 
             val fragment : Fragment = StronaGlownaFragment()

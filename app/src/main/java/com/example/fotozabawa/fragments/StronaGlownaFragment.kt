@@ -51,6 +51,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
     private var imageCapture: ImageCapture? = null
     private lateinit var outputDirectory: File
     private var list_paths = arrayListOf<String>()
+    private var session = false
 
 
 
@@ -77,7 +78,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                     if (appDatabase.ustawieniaDao().exists()==false) {
                         runBlocking(Dispatchers.IO) { //narazie do testowania połączenia z serwerm, potem zmienić żeby po starcie aplikacji były to wartości startowe
                             appDatabase.ustawieniaDao().deleteAll()
-                            var ustawienie = Ustawienia(1, 0, 1, 0)
+                            var ustawienie = Ustawienia(1, 0, 1, "space",0)
                             appDatabase.ustawieniaDao().insert(ustawienie)
                         }
                     }
@@ -100,8 +101,10 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
 
         val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 1000)
-
+//        if(session==false){
         val buttonStart = view.findViewById<Button>(R.id.button_start)
+
+//            session=true
         buttonStart.setOnClickListener {
             list_paths.clear()
 
@@ -112,11 +115,11 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
 
                     launch {
-       //<----------Iteracje, zdjęcia, beepy---------->//
+                        //<----------Iteracje, zdjęcia, beepy---------->//
 
                         for (x in 1..tryb_number.await()) {
 
-                            for (y in 1..czas_number.await()){
+                            for (y in 1..czas_number.await()) {
                                 toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150)
                                 delay(1000)
                             }
@@ -131,15 +134,16 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
             }
 
-            Handler().postDelayed( {
+            Handler().postDelayed({
                 uploadImages()
-                runBlocking (Dispatchers.IO){
+                runBlocking(Dispatchers.IO) {
                     var x = appDatabase.id_folderDao().getiD()
                     appDatabase.id_folderDao().update(x + 1)
                 }
+                session=false
             }, 5000)
 
-
+        //}
         }
 
         val myButton = view.findViewById<Button>(R.id.button_menu)
@@ -315,6 +319,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         runBlocking(Dispatchers.IO) {
             launch {
                 var id = async{appDatabase.id_folderDao().getiD()}
+                var banner_selected = async{appDatabase.ustawieniaDao().get_banner()}
                 MyAPI().uploadImage(
                     RequestBody.create(
                         MediaType.parse("multipart/form-data"),
@@ -326,7 +331,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                     MultipartBody.Part.createFormData("image4", "image4.jpg", body4),
                     MultipartBody.Part.createFormData("image5", "image5.jpg", body5),
                     MultipartBody.Part.createFormData("image6", "image6.jpg", body6),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), "space")
+                    RequestBody.create(MediaType.parse("multipart/form-data"), banner_selected.await())
                 ).enqueue(object : Callback<UploadResponse> {
                     override fun onResponse(
                         call: Call<UploadResponse>,

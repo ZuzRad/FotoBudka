@@ -11,6 +11,9 @@ interface UstawieniaDao {
     @Query("SELECT czas_position FROM ustawienia")
     fun getCzas_position(): Int
 
+    @Query("SELECT banner FROM ustawienia")
+    fun get_banner(): String
+
     @Query("SELECT tryb FROM ustawienia")
     suspend fun getTryb(): Int
 
