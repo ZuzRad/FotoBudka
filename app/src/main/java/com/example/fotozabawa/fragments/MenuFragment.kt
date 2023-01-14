@@ -40,7 +40,7 @@ class MenuFragment : Fragment() {
     }
 
 
-    @OptIn(DelicateCoroutinesApi::class)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -87,14 +87,14 @@ class MenuFragment : Fragment() {
         val myButton = view.findViewById<Button>(R.id.button_start)
         myButton.setOnClickListener{
             var ustawienie = Ustawienia(0,0,0,0)
-            var callback = ""
+
             runBlocking(Dispatchers.IO) {
                 appDatabase.ustawieniaDao().deleteAll()
                 ustawienie = Ustawienia(czas_number,czas_position,tryb_number,tryb_position)
                 appDatabase.ustawieniaDao().insert(ustawienie)
-                callback = czas_number.toString()
+
             }
-            Toast.makeText(requireContext(), callback, Toast.LENGTH_SHORT).show()
+
             val fragment : Fragment = StronaGlownaFragment()
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()

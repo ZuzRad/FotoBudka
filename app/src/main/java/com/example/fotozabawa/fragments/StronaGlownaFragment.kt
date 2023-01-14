@@ -97,6 +97,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
         val buttonStart = view.findViewById<Button>(R.id.button_start)
         buttonStart.setOnClickListener {
+            list_paths.clear()
 
             runBlocking(Dispatchers.IO) {
                 launch {
@@ -125,9 +126,8 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
             }
 
             Handler().postDelayed( {
-                Toast.makeText(requireContext(), list_paths.toString(), Toast.LENGTH_SHORT).show()
                 uploadImages()
-            }, 3000)
+            }, 10000)
 
 
         }
@@ -155,13 +155,15 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
 
     private fun uploadImages(){
-        var image1 :File = File("")
-        var image2 :File = File("")
-        var image3 :File = File("")
-        var image4 :File = File("")
-        var image5 :File = File("")
-        var image6 :File = File("")
+        var image1: File
+        var image2: File
+        var image3: File
+        var image4: File
+        var image5: File
+        var image6: File
         var size = list_paths.size
+
+        //Toast.makeText(requireContext(),size.toString(),Toast.LENGTH_LONG).show()
 
         if(size==1){
             val name = list_paths[0].subSequence(69, list_paths[0].length)
@@ -274,7 +276,8 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
             val outputStream6 = FileOutputStream(image6)
             inputStream6.copyTo(outputStream6)
         }
-        else if(size==6){
+        else{
+
             val name1 = list_paths[0].subSequence(69, list_paths[0].length)
             val parcelFileDescriptor1 = requireContext().contentResolver.openFileDescriptor(list_paths[0].toUri(), "r", null) ?: return
 
