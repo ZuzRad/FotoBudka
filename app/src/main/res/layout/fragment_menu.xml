@@ -15,6 +15,7 @@
         android:text="Wybierz czas przed wykonaniem zdjęcia"
         android:textColor="@color/white"
         android:textSize="20dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,6 +27,7 @@
         android:layout_height="wrap_content"
         android:background="@color/newblue"
         android:padding="10dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_czas" />
@@ -37,6 +39,7 @@
         android:text="Wybierz ilość zdjęć"
         android:textColor="@color/white"
         android:textSize="20dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_czas" />
@@ -47,6 +50,7 @@
         android:layout_height="wrap_content"
         android:background="@color/newblue"
         android:padding="10dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_tryb" />
@@ -59,6 +63,7 @@
         android:text="Wybierz piosenkę"
         android:textColor="@color/white"
         android:textSize="20dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_tryb" />
@@ -69,15 +74,17 @@
         android:layout_height="wrap_content"
         android:background="@color/newblue"
         android:padding="10dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/piosenkaView" />
 
     <Button
         android:id="@+id/button_play"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="80dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="150dp"
         android:background="@drawable/ic_baseline_play_circle_24"
         app:layout_constraintEnd_toStartOf="@+id/button_stop"
         app:layout_constraintStart_toStartOf="parent"
@@ -85,9 +92,10 @@
 
     <Button
         android:id="@+id/button_stop"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginRight="80dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="150dp"
         android:background="@drawable/ic_baseline_stop_circle_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/button_play"
@@ -99,6 +107,7 @@
         android:layout_height="wrap_content"
         android:text="Wybierz tło zdjęć"
         android:textColor="@color/white"
+        android:layout_marginTop="30dp"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -162,7 +171,6 @@
         android:layout_width="112dp"
         android:layout_height="114dp"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginStart="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_baner"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
@@ -171,10 +179,10 @@
         android:id="@+id/button_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="10dp"
         android:padding="10dp"
         android:text="START"
-        android:textColor="@color/newdarkblue"
+        android:textColor="@color/white"
         android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
