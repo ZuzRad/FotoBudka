@@ -23,7 +23,7 @@ class MenuFragment : Fragment() {
     private var _binding: FragmentMenuBinding? = null
     private val binding get() = _binding!!
     private val tryby = arrayOf("1 zdjęcie", "2 zdjęcia", "3 zdjęcia", "6 zdjęć")
-    private val czas = arrayOf("1 sekunda", "3 sekundy", "5 sekund", "10 sekund")
+    private val czas = arrayOf("1 sekunda", "3 sekundy", "5 sekund", "8 sekund")
     private val piosenka = arrayOf("Deja vu","Crab","Gandalf","Last Christmas")
     private var tryb_number = 0
     private var czas_number = 0
