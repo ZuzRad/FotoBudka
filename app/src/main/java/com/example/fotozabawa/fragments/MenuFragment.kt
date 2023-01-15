@@ -28,7 +28,7 @@ class MenuFragment : Fragment() {
     private val binding get() = _binding!!
     private val tryby = arrayOf("1 zdjęcie", "2 zdjęcia", "3 zdjęcia", "6 zdjęć")
     private val czas = arrayOf("1 sekunda", "3 sekundy", "5 sekund", "8 sekund")
-    private val piosenka = arrayOf("Deja vu","Crab","Gandalf","Last Christmas")
+    private val piosenka = arrayOf("Deja vu","Crab","Gandalf","Last Christmas","Pumped Up Kicks")
     private var tryb_number = 0
     private var czas_number = 0
     private var tryb_position = 0
@@ -186,7 +186,7 @@ class MenuFragment : Fragment() {
         else if(position==1){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.crab)}
         else if(position==2){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.gandalf)}
         else if(position==3){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.wham_last_christmas)}
-
+        else if(position==4){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.pumpedup)}
         try{
             mediaPlayer!!.start()
         }catch(e: IOException){
