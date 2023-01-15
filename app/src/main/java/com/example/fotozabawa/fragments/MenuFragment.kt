@@ -32,7 +32,7 @@ class MenuFragment : Fragment() {
     private var banner_selected = "space"
     private var piosenka_position = 0
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
         appDatabase = AppDatabase.getDatabase(requireContext())
         return binding.root
@@ -44,10 +44,10 @@ class MenuFragment : Fragment() {
     }
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //----------------------BANERY--------------------
         val img1 = view.findViewById<ImageView>(R.id.imageView_baner1)
         img1.setImageResource(R.drawable.space)
         img1.setOnClickListener{
@@ -83,7 +83,7 @@ class MenuFragment : Fragment() {
 
 
 
-        //----------------------lista--------------------
+        //----------------------TRYB ZDJĘĆ--------------------
         val spinner_tryb = view.findViewById<Spinner>(R.id.spinner_tryb)
 
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, tryby)
@@ -100,6 +100,7 @@ class MenuFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
+        //----------------------CZAS POMIĘDZY ZDJĘCIAMI--------------------
         val spinner_czas = view.findViewById<Spinner>(R.id.spinner_czas)
         val adapter2 = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, czas)
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -114,6 +115,7 @@ class MenuFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
+        //----------------------PIOSENKA--------------------
         val spinner_piosenka = view.findViewById<Spinner>(R.id.spinner_piosenka)
         val adapter3 = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, piosenka)
         adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -127,25 +129,27 @@ class MenuFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-
-        runBlocking(Dispatchers.IO) {
-            czas_position = appDatabase.ustawieniaDao().getCzas_position()
-            tryb_position = appDatabase.ustawieniaDao().getTryb_position()
+        //----------------------PROPERTISY Z BAZY DANYCH--------------------
+        GlobalScope.launch(Dispatchers.IO) {
+            val x = async{appDatabase.ustawieniaDao().getCzas_position()}
+            val y = async{appDatabase.ustawieniaDao().getTryb_position()}
+            val z = async{appDatabase.ustawieniaDao().getPiosenka_position()}
+            spinner_czas.setSelection(x.await())
+            spinner_tryb.setSelection(y.await())
+            spinner_piosenka.setSelection(z.await())
         }
-        spinner_czas.setSelection(czas_position)
-        spinner_tryb.setSelection(tryb_position)
-        //----------------------powrót z menu------------------
 
+
+        //----------------------BUTTON START------------------
         val myButton = view.findViewById<Button>(R.id.button_start)
         myButton.setOnClickListener{
-            var ustawienie = Ustawienia(0,0,0,0,"space",0)
-
-            runBlocking(Dispatchers.IO) {
+            //----------------------DODANIE DO BAZY USTAWIEŃ--------------------
+            GlobalScope.launch(Dispatchers.IO) {
                 appDatabase.ustawieniaDao().deleteAll()
-                ustawienie = Ustawienia(czas_number,czas_position,piosenka_position,tryb_number,banner_selected,tryb_position)
+                val ustawienie = Ustawienia(czas_number,czas_position,piosenka_position,tryb_number,banner_selected,tryb_position)
                 appDatabase.ustawieniaDao().insert(ustawienie)
             }
-
+            //----------------------POWRÓT DO ROBIENIA ZDJĘĆ------------------
             val fragment : Fragment = StronaGlownaFragment()
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()

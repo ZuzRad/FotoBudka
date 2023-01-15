@@ -4,70 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.MenuFragment"
     android:background="@color/newlightblue"
-    >
+    tools:context=".fragments.MenuFragment">
 
-    <TextView
-        android:id="@+id/piosenkaView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Wybierz piosenkę"
-        android:textSize="20dp"
-        android:textColor="@color/white"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Spinner
-        android:id="@+id/spinner_piosenka"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:background="@color/newblue"
-        android:layout_marginTop="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/piosenkaView" />
-
-
-
-
-    <TextView
-        android:id="@+id/textView_tryb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Wybierz ilość zdjęć"
-        android:textSize="20dp"
-        android:layout_marginTop="30dp"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_piosenka" />
-
-    <Spinner
-        android:id="@+id/spinner_tryb"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:background="@color/newblue"
-        android:padding="10dp"
-        android:layout_marginTop="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_tryb" />
 
     <TextView
         android:id="@+id/textView_czas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Wybierz czas przed wykonaniem zdjęcia"
-        android:textSize="20dp"
-        android:layout_marginTop="30dp"
         android:textColor="@color/white"
+        android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_tryb" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <Spinner
@@ -76,10 +26,84 @@
         android:layout_height="wrap_content"
         android:background="@color/newblue"
         android:padding="10dp"
-        android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_czas" />
+
+    <TextView
+        android:id="@+id/textView_tryb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wybierz ilość zdjęć"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_czas" />
+
+    <Spinner
+        android:id="@+id/spinner_tryb"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:background="@color/newblue"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_tryb" />
+
+
+    <TextView
+        android:id="@+id/piosenkaView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wybierz piosenkę"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_tryb" />
+
+    <Spinner
+        android:id="@+id/spinner_piosenka"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:background="@color/newblue"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/piosenkaView" />
+
+    <Button
+        android:id="@+id/button_play"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="80dp"
+        android:background="@drawable/ic_baseline_play_circle_24"
+        app:layout_constraintEnd_toStartOf="@+id/button_stop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_piosenka" />
+
+    <Button
+        android:id="@+id/button_stop"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="80dp"
+        android:background="@drawable/ic_baseline_stop_circle_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button_play"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_piosenka" />
+
+    <TextView
+        android:id="@+id/textView_baner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wybierz tło zdjęć"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_play" />
+
 
     <ImageView
         android:id="@+id/imageView_baner1"
@@ -102,17 +126,6 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView_baner2"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-    <TextView
-        android:id="@+id/textView_baner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Wybierz tło zdjęć"
-        android:textSize="20dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_czas" />
 
     <ImageView
         android:id="@+id/imageView_baner5"
@@ -158,11 +171,11 @@
         android:id="@+id/button_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="START"
-        android:padding="10dp"
-        android:textSize="30dp"
-        android:textColor="@color/newdarkblue"
         android:layout_marginBottom="20dp"
+        android:padding="10dp"
+        android:text="START"
+        android:textColor="@color/newdarkblue"
+        android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

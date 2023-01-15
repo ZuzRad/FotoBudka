@@ -58,12 +58,11 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentStronaGlownaBinding.inflate(inflater, container, false)
         appDatabase = AppDatabase.getDatabase(requireContext())
@@ -74,17 +73,20 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         super.onViewCreated(view, savedInstanceState)
         outputDirectory = getOutputDirectory()
 
+        //----------------------JEŚLI APKA DOSTAŁA WSZYSTKIE POTRZEBNE POZWOLENIA------------------
         if(allPermissionGranted()){
             startCamera()
             runBlocking(Dispatchers.IO) {
                 launch {
+                    //----------------------USTAWIENIA POCZĄTKOWE------------------
                     if (appDatabase.ustawieniaDao().exists()==false) {
-                        runBlocking(Dispatchers.IO) { //narazie do testowania połączenia z serwerm, potem zmienić żeby po starcie aplikacji były to wartości startowe
+                        runBlocking(Dispatchers.IO) {
                             appDatabase.ustawieniaDao().deleteAll()
                             var ustawienie = Ustawienia(1, 0, 2,0, "space",0)
                             appDatabase.ustawieniaDao().insert(ustawienie)
                         }
                     }
+                    //----------------------FOLDER POCZĄTKOWY------------------
                     if(appDatabase.id_folderDao().exists()==false){
                         runBlocking (Dispatchers.IO){
                             appDatabase.id_folderDao().insert(Id_folder(1))
@@ -92,7 +94,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                     }
                 }
             }
-
+            //----------------------JEŚLI APKA NIE DOSTAŁA WSZYSTKICH POTRZEBNYCH POZWOLEŃ------------------
         }else{
             Toast.makeText(activity?.applicationContext,"Permissions requested", Toast.LENGTH_SHORT).show()
             activity?.let {
@@ -102,30 +104,24 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         }
 
 
-
+        //----------------------PIKANIE------------------
         val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 10000)
+
         val buttonStart = view.findViewById<Button>(R.id.button_start)
-        var check = false
-
-
         buttonStart.setOnClickListener {
 
+            //----------------------JEŚLI NIE JEST JUŻ ODPALONA SEJSA ZDJĘĆ------------------
             if(session==false){
-                check = false
-                Log.d("sesja-------------",session.toString())
                 session=true
-                Log.d("sesja-------------",session.toString())
-            playAudio()
-            list_paths.clear()
+                playAudio()
+                list_paths.clear()
 
-            GlobalScope.launch(Dispatchers.IO) {
-                    var czas_number = async { appDatabase.ustawieniaDao().getCzas() }
+                //----------------------PIKANIE PRZY ROBIENIU ZDJĘĆ ORAZ WYKONYWANIE ZDJĘĆ------------------
+                GlobalScope.launch(Dispatchers.IO) {
+                    val czas_number = async { appDatabase.ustawieniaDao().getCzas() }
                     var tryb_number = async { appDatabase.ustawieniaDao().getTryb() }
                     launch {
-                        //<----------Iteracje, zdjęcia, beepy---------->//
-                        Log.d("sesja",session.toString())
                         for (x in 1..tryb_number.await()) {
-
                             for (y in 1..czas_number.await()) {
                                 toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150)
                                 delay(1000)
@@ -138,10 +134,9 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                         sendimage()
                     }
                 }
-
             }
         }
-
+        //----------------------PRZEJŚCIE DO MENU------------------
         val myButton = view.findViewById<Button>(R.id.button_menu)
         myButton.setOnClickListener {
             if(session==false) {
@@ -154,36 +149,32 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                 requireActivity().title = "Menu"
             }
         }
-
-
     }
 
+    //----------------------ZATRZYMANIE MUZYKI ORAZ WYWOŁANIE FUNKCJI WYSYŁAJĄCEJ ZDJĘCIA NA SERWER------------------
     suspend fun sendimage() {
             pauseAudio()
             delay(5000)
             uploadImages()
+        //----------------------AKTUALIZACJA NUMERU FOLDERU------------------
             runBlocking(Dispatchers.IO) {
                 var x = appDatabase.id_folderDao().getiD()
                 appDatabase.id_folderDao().update(x + 1)
             }
-            delay(5000)
             session = false
     }
-        fun playAudio(){
-        var position = 0
 
+    //----------------------FUNKCJA ODPALAJĄCA MUZYKĘ------------------
+    fun playAudio(){
+        var position = 0
 
         runBlocking (Dispatchers.IO){ position = appDatabase.ustawieniaDao().getPiosenka_position() }
 
+        //----------------------WYBRANIE MUZYKI------------------
         if(position==0){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.deja_vu_chorus)}
         else if(position==1){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.crab)}
         else if(position==2){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.gandalf)}
         else if(position==3){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.wham_last_christmas)}
-
-//        var maxVolume =50
-//        var currVolume = 50
-//        val log1 = (Math.log((maxVolume - currVolume).toDouble()) / Math.log(maxVolume.toDouble())).toFloat()
-//        mediaPlayer?.setVolume(log1, log1)
 
         try{
             mediaPlayer!!.start()
@@ -192,19 +183,16 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         }
     }
 
+    //----------------------FUNKCJA ZATRZYMUJĄCA MUZYKĘ------------------
     fun pauseAudio(){
         if(mediaPlayer!!.isPlaying){
             mediaPlayer!!.stop()
             mediaPlayer!!.reset()
             mediaPlayer!!.release()
-        }else{
-            Toast.makeText(requireContext(), "Audio has not played", Toast.LENGTH_LONG).show()
         }
     }
 
-    override fun onProgressUpdate(percentage: Int) {
-
-    }
+    override fun onProgressUpdate(percentage: Int) {}
 
 
     private fun uploadImages(){
@@ -216,7 +204,6 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         var image6= File("")
         var size = list_paths.size
 
-        //Toast.makeText(requireContext(),size.toString(),Toast.LENGTH_LONG).show()
 
         if(size==1){
             if(size==1){
@@ -333,15 +320,6 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         }
 
 
-//        var name = list_paths[0].subSequence(69, list_paths[0].length)
-//        val parcelFileDescriptor =
-//            requireContext().contentResolver.openFileDescriptor(list_paths[0].toUri(), "r", null) ?: return
-//        val file = File(requireContext().cacheDir, name.toString()) //w tym miejscu się wywala... nie ma takiego pliku
-//        val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
-//        val outputStream = FileOutputStream(file)
-//        inputStream.copyTo(outputStream)
-        //val body = UploadRequestBody(file, "image", this)
-
             val body1 = UploadRequestBody(image1, "image", this)
             val body2 = UploadRequestBody(image2, "image", this)
             val body3 = UploadRequestBody(image3, "image", this)
@@ -376,10 +354,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                     override fun onResponse(
                         call: Call<UploadResponse>,
                         response: Response<UploadResponse>
-                    ) {
-                        Log.d("---------      ", "UDAŁO SIĘ!!!!!!!!!!!!!!!!!!!!!")
-                        Toast.makeText(requireContext(), "wysłano pliki", Toast.LENGTH_SHORT).show()
-                    }
+                    ) {}
 
                     override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
                         Log.d("BŁĄD---------      ", t.message!!)
@@ -389,7 +364,6 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
             }
         }
 
-       // }
     }
 
 
