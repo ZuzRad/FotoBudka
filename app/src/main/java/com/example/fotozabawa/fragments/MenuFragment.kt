@@ -55,29 +55,29 @@ class MenuFragment : Fragment() {
             Toast.makeText(requireContext(), "Wybrano baner: "+banner_selected, Toast.LENGTH_SHORT).show()
         }
         val img2 = view.findViewById<ImageView>(R.id.imageView_baner2)
-        img2.setImageResource(R.drawable.megamind)
+        img2.setImageResource(R.drawable.blue)
         img2.setOnClickListener{
-            banner_selected = "megamind"
+            banner_selected = "blue"
             Toast.makeText(requireContext(), "Wybrano baner: "+banner_selected, Toast.LENGTH_SHORT).show()
         }
         val img3 = view.findViewById<ImageView>(R.id.imageView_baner3)
-        img3.setImageResource(R.drawable.space)
-        img3.setOnClickListener{banner_selected = "space"
+        img3.setImageResource(R.drawable.christmas)
+        img3.setOnClickListener{banner_selected = "christmas"
             Toast.makeText(requireContext(), "Wybrano baner: "+banner_selected, Toast.LENGTH_SHORT).show()
         }
         val img4 = view.findViewById<ImageView>(R.id.imageView_baner4)
-        img4.setImageResource(R.drawable.space)
-        img4.setOnClickListener{banner_selected = "space"
+        img4.setImageResource(R.drawable.led)
+        img4.setOnClickListener{banner_selected = "led"
             Toast.makeText(requireContext(), "Wybrano baner: "+banner_selected, Toast.LENGTH_SHORT).show()
         }
         val img5 = view.findViewById<ImageView>(R.id.imageView_baner5)
-        img5.setImageResource(R.drawable.space)
-        img5.setOnClickListener{banner_selected = "space"
+        img5.setImageResource(R.drawable.yellow)
+        img5.setOnClickListener{banner_selected = "yellow"
             Toast.makeText(requireContext(), "Wybrano baner: "+banner_selected, Toast.LENGTH_SHORT).show()
         }
         val img6 = view.findViewById<ImageView>(R.id.imageView_baner6)
-        img6.setImageResource(R.drawable.space)
-        img6.setOnClickListener{banner_selected = "space"
+        img6.setImageResource(R.drawable.pastel)
+        img6.setOnClickListener{banner_selected = "pastel"
             Toast.makeText(requireContext(), "Wybrano baner: "+banner_selected, Toast.LENGTH_SHORT).show()
         }
 
