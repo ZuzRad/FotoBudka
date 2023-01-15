@@ -1,6 +1,8 @@
 package com.example.fotozabawa.fragments
 
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +18,8 @@ import com.example.fotozabawa.database.AppDatabase
 import com.example.fotozabawa.R
 import com.example.fotozabawa.model.Ustawienia
 import kotlinx.coroutines.*
+import java.io.IOException
+import kotlin.properties.Delegates
 
 
 class MenuFragment : Fragment() {
@@ -31,6 +35,8 @@ class MenuFragment : Fragment() {
     private var czas_position = 0
     private var banner_selected = "space"
     private var piosenka_position = 0
+    private var isplaying = false
+    var mediaPlayer: MediaPlayer?=null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
@@ -129,6 +135,7 @@ class MenuFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
+
         //----------------------PROPERTISY Z BAZY DANYCH--------------------
         GlobalScope.launch(Dispatchers.IO) {
             val x = async{appDatabase.ustawieniaDao().getCzas_position()}
@@ -143,6 +150,7 @@ class MenuFragment : Fragment() {
         //----------------------BUTTON START------------------
         val myButton = view.findViewById<Button>(R.id.button_start)
         myButton.setOnClickListener{
+            pauseAudio()
             //----------------------DODANIE DO BAZY USTAWIEŃ--------------------
             GlobalScope.launch(Dispatchers.IO) {
                 appDatabase.ustawieniaDao().deleteAll()
@@ -157,6 +165,41 @@ class MenuFragment : Fragment() {
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
             requireActivity().title = "Strona Główna"
+        }
+        val playButton = view.findViewById<Button>(R.id.button_play)
+        playButton.setOnClickListener {
+            if(isplaying==true){pauseAudio()}
+            playAudio(piosenka_position)
+            isplaying=true
+        }
+        val stopButton = view.findViewById<Button>(R.id.button_stop)
+        stopButton.setOnClickListener {
+            pauseAudio()
+            isplaying=false
+        }
+
+
+    }
+
+    fun playAudio(position: Int){
+        if(position==0){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.deja_vu_chorus)}
+        else if(position==1){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.crab)}
+        else if(position==2){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.gandalf)}
+        else if(position==3){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.wham_last_christmas)}
+
+        try{
+            mediaPlayer!!.start()
+        }catch(e: IOException){
+            e.printStackTrace()
+        }
+
+    }
+
+    fun pauseAudio(){
+        if(mediaPlayer!!.isPlaying){
+            mediaPlayer!!.stop()
+            mediaPlayer!!.reset()
+            mediaPlayer!!.release()
         }
     }
 }
