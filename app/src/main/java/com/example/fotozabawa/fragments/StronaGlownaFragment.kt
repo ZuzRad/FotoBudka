@@ -82,7 +82,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                     if (appDatabase.ustawieniaDao().exists()==false) {
                         runBlocking(Dispatchers.IO) { //narazie do testowania połączenia z serwerm, potem zmienić żeby po starcie aplikacji były to wartości startowe
                             appDatabase.ustawieniaDao().deleteAll()
-                            var ustawienie = Ustawienia(1, 0, 1,0, "space",0)
+                            var ustawienie = Ustawienia(1, 0, 2,0, "space",0)
                             appDatabase.ustawieniaDao().insert(ustawienie)
                         }
                     }
@@ -139,7 +139,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                 }
 
             }
-
+            pauseAudio()
             Handler().postDelayed({
                 uploadImages()
                 runBlocking(Dispatchers.IO) {
@@ -147,7 +147,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                     appDatabase.id_folderDao().update(x + 1)
                 }
                 session=false
-                pauseAudio()
+
             }, 5000)
 
         //}
@@ -172,23 +172,17 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
     fun playAudio(){
         var position = 0
         runBlocking (Dispatchers.IO){ position = appDatabase.ustawieniaDao().getPiosenka_position() }
-        if(position==1){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.deja_vu_chorus)}
-        else if(position==2){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.crab)}
-        else if(position==3){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.gandalf)}
-        else if(position==4){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.wham_last_christmas)}
 
-//        mediaPlayer = MediaPlayer()
-//        mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-        mediaPlayer = MediaPlayer.create(requireContext(),R.raw.deja_vu_chorus)
+        if(position==0){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.deja_vu_chorus)}
+        else if(position==1){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.crab)}
+        else if(position==2){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.gandalf)}
+        else if(position==3){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.wham_last_christmas)}
+
         try{
-            //mediaPlayer!!.setDataSource(audioUrl)
-            //mediaPlayer!!.prepare()
             mediaPlayer!!.start()
         }catch(e: IOException){
             e.printStackTrace()
         }
-
-        Toast.makeText(requireContext(),"Audio started playing",Toast.LENGTH_SHORT).show()
     }
 
     fun pauseAudio(){
@@ -272,11 +266,11 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
             image3= File(requireContext().cacheDir, name2.toString());image4=image3;
             val inputStream3 = FileInputStream(parcelFileDescriptor2.fileDescriptor); val inputStream4 = inputStream3;
-            val outputStream3 = FileOutputStream(image4); val outputStream4 = outputStream3;
+            val outputStream3 = FileOutputStream(image3); val outputStream4 = outputStream3;
 
             image5= File(requireContext().cacheDir, name3.toString());image6=image5;
             val inputStream5 = FileInputStream(parcelFileDescriptor3.fileDescriptor); val inputStream6 = inputStream5;
-            val outputStream5 = FileOutputStream(image4); val outputStream6=outputStream5;
+            val outputStream5 = FileOutputStream(image5); val outputStream6=outputStream5;
             inputStream1.copyTo(outputStream1);inputStream2.copyTo(outputStream2);inputStream3.copyTo(outputStream3);inputStream4.copyTo(outputStream4); inputStream5.copyTo(outputStream5); inputStream6.copyTo(outputStream6)
 
         }

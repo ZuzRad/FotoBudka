@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.fotozabawa.model.Id_folder
 import com.example.fotozabawa.model.Ustawienia
 
-@Database(entities = [Ustawienia::class, Id_folder::class], version = 7, exportSchema = false)
+@Database(entities = [Ustawienia::class, Id_folder::class], version = 8, exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun ustawieniaDao(): UstawieniaDao

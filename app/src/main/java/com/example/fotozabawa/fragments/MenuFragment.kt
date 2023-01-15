@@ -30,7 +30,6 @@ class MenuFragment : Fragment() {
     private var tryb_position = 0
     private var czas_position = 0
     private var banner_selected = "space"
-    private var piosenka_selected = 0
     private var piosenka_position = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -124,7 +123,6 @@ class MenuFragment : Fragment() {
                 spinner_piosenka.setSelection(position)
                 spinner_piosenka.setPrompt(piosenka[position])
                 piosenka_position=position
-                Toast.makeText(requireContext(), piosenka[position], Toast.LENGTH_SHORT).show()
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
