@@ -1,13 +1,13 @@
 package com.example.fotozabawa.fragments
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.ToneGenerator
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -69,6 +69,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         return binding.root
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         outputDirectory = getOutputDirectory()
@@ -82,7 +83,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                     if (appDatabase.ustawieniaDao().exists()==false) {
                         runBlocking(Dispatchers.IO) {
                             appDatabase.ustawieniaDao().deleteAll()
-                            var ustawienie = Ustawienia(1, 0, 2,0, "space",0)
+                            val ustawienie = Ustawienia(1, 0, 2,0, "space",0)
                             appDatabase.ustawieniaDao().insert(ustawienie)
                         }
                     }
@@ -119,7 +120,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                 //----------------------PIKANIE PRZY ROBIENIU ZDJĘĆ ORAZ WYKONYWANIE ZDJĘĆ------------------
                 GlobalScope.launch(Dispatchers.IO) {
                     val czas_number = async { appDatabase.ustawieniaDao().getCzas() }
-                    var tryb_number = async { appDatabase.ustawieniaDao().getTryb() }
+                    val tryb_number = async { appDatabase.ustawieniaDao().getTryb() }
                     launch {
                         for (x in 1..tryb_number.await()) {
                             for (y in 1..czas_number.await()) {
@@ -158,7 +159,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
             uploadImages()
         //----------------------AKTUALIZACJA NUMERU FOLDERU------------------
             runBlocking(Dispatchers.IO) {
-                var x = appDatabase.id_folderDao().getiD()
+                val x = appDatabase.id_folderDao().getiD()
                 appDatabase.id_folderDao().update(x + 1)
             }
             session = false
@@ -194,32 +195,32 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
     override fun onProgressUpdate(percentage: Int) {}
 
-
+    //----------------------FUNKCJA WYSYŁAJĄCA ZDJĘCIA NA SERWER------------------
+    @SuppressLint("Recycle")
     private fun uploadImages(){
-        var image1= File("")
-        var image2= File("")
-        var image3= File("")
-        var image4= File("")
-        var image5= File("")
-        var image6= File("")
-        var size = list_paths.size
+        val image1: File
+        val image2: File
+        val image3: File
+        val image4: File
+        val image5: File
+        val image6: File
+        val size = list_paths.size
 
-
+        //----------------------JEŚLI WYBRANO JEDNO ZDJĘCIA------------------
         if(size==1){
-            if(size==1){
-                //<------ INICJOWANIE WARTOŚCI POCZĄTKOWYCH---->//
-                var name = list_paths[0].subSequence(69, list_paths[0].length)
-                val parcelFileDescriptor = requireContext().contentResolver.openFileDescriptor(list_paths[0].toUri(), "r", null) ?: return
-                image1= File(requireContext().cacheDir, name.toString())
-                val inputStream1 = FileInputStream(parcelFileDescriptor.fileDescriptor)
-                val outputStream1 = FileOutputStream(image1)
-                         //<---- PRZYPISYWANIE ---->//
-                image2 = image1;image3=image1;image4=image1;image5=image1;image6=image1;
-                val inputStream2=inputStream1;val inputStream3=inputStream1;val inputStream4=inputStream1;val inputStream5=inputStream1;val inputStream6=inputStream1;
-                val outputStream2=outputStream1;val outputStream3=outputStream1;val outputStream4=outputStream1;val outputStream5=outputStream1;val outputStream6=outputStream1;
-                inputStream1.copyTo(outputStream1);inputStream2.copyTo(outputStream2);inputStream3.copyTo(outputStream3);inputStream4.copyTo(outputStream4);inputStream5.copyTo(outputStream5);inputStream6.copyTo(outputStream6)
-            }
+            //<------ INICJOWANIE WARTOŚCI POCZĄTKOWYCH---->//
+            val name = list_paths[0].subSequence(69, list_paths[0].length)
+            val parcelFileDescriptor = requireContext().contentResolver.openFileDescriptor(list_paths[0].toUri(), "r", null) ?: return
+            image1= File(requireContext().cacheDir, name.toString())
+            val inputStream1 = FileInputStream(parcelFileDescriptor.fileDescriptor)
+            val outputStream1 = FileOutputStream(image1)
+            //<---- PRZYPISYWANIE ---->//
+            image2 = image1;image3=image1;image4=image1;image5=image1;image6=image1;
+            val inputStream2=inputStream1;val inputStream3=inputStream1;val inputStream4=inputStream1;val inputStream5=inputStream1;val inputStream6=inputStream1;
+            val outputStream2=outputStream1;val outputStream3=outputStream1;val outputStream4=outputStream1;val outputStream5=outputStream1;val outputStream6=outputStream1;
+            inputStream1.copyTo(outputStream1);inputStream2.copyTo(outputStream2);inputStream3.copyTo(outputStream3);inputStream4.copyTo(outputStream4);inputStream5.copyTo(outputStream5);inputStream6.copyTo(outputStream6)
         }
+        //----------------------JEŚLI WYBRANO 2 ZDJĘCIA------------------
         else if(size == 2){
             //<------ INICJOWANIE WARTOŚCI POCZĄTKOWYCH---->//
 
@@ -243,6 +244,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
             inputStream1.copyTo(outputStream1);inputStream2.copyTo(outputStream2);inputStream3.copyTo(outputStream3);inputStream4.copyTo(outputStream4); inputStream5.copyTo(outputStream5); inputStream6.copyTo(outputStream6)
 
         }
+        //----------------------JEŚLI WYBRANO 3 ZDJĘCIA------------------
         else if(size==3){
             //<------ INICJOWANIE WARTOŚCI POCZĄTKOWYCH---->//
             val name1 = list_paths[0].subSequence(69, list_paths[0].length)
@@ -268,6 +270,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
             inputStream1.copyTo(outputStream1);inputStream2.copyTo(outputStream2);inputStream3.copyTo(outputStream3);inputStream4.copyTo(outputStream4); inputStream5.copyTo(outputStream5); inputStream6.copyTo(outputStream6)
 
         }
+        //----------------------JEŚLI WYBRANO 6 ZDJĘĆ------------------
         else{
 
             val name1 = list_paths[0].subSequence(69, list_paths[0].length)
@@ -334,10 +337,13 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         Log.d("Zdjęcie5---------------",image5.toString())
         Log.d("Zdjęcie6---------------",image6.toString())
 
+        //----------------------POBRANIE WYBRANEGO BANERU ORAZ NR FOLDERU------------------
         runBlocking(Dispatchers.IO) {
             launch {
-                var id = async{appDatabase.id_folderDao().getiD()}
-                var banner_selected = async{appDatabase.ustawieniaDao().get_banner()}
+                val id = async{appDatabase.id_folderDao().getiD()}
+                val banner_selected = async{appDatabase.ustawieniaDao().get_banner()}
+
+                //----------------------WYSYŁANIE DANYCH------------------
                 MyAPI().uploadImage(
                     RequestBody.create(
                         MediaType.parse("multipart/form-data"),
@@ -359,11 +365,9 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                     override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
                         Log.d("BŁĄD---------      ", t.message!!)
                     }
-
                 })
             }
         }
-
     }
 
 
@@ -377,6 +381,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
             mediaDir else activity?.filesDir!!
     }
 
+    //----------------------ROBIENIE ZDJĘCIA------------------
     private fun takePhoto(){
         val imageCapture = imageCapture?:return
         val photoFile = File(
@@ -389,6 +394,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
             object :ImageCapture.OnImageSavedCallback{
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
+                    //----------------------ZAPISYWANIE URI DO NASZEJ LISTY------------------
                     list_paths.add(savedUri.toString())
 
                 }
@@ -399,6 +405,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         )
     }
 
+    //----------------------URUCHOMIENIE KAMERY------------------
     private fun startCamera(){
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener({
@@ -418,6 +425,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
+    //----------------------POZWOLENIA------------------
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
