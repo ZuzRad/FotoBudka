@@ -1,5 +1,6 @@
 package com.example.fotozabawa
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
         setContentView(com.example.fotozabawa.R.layout.activity_main)
         drawerLayout = findViewById(com.example.fotozabawa.R.id.drawerLayout)
