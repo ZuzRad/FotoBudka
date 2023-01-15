@@ -104,24 +104,26 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
 
         val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 10000)
-//        if(session==false){
         val buttonStart = view.findViewById<Button>(R.id.button_start)
+        var check = false
 
 
-//            session=true
         buttonStart.setOnClickListener {
+
+            if(session==false){
+                check = false
+                Log.d("sesja-------------",session.toString())
+                session=true
+                Log.d("sesja-------------",session.toString())
             playAudio()
             list_paths.clear()
 
-            runBlocking(Dispatchers.IO) {
-                launch {
+            GlobalScope.launch(Dispatchers.IO) {
                     var czas_number = async { appDatabase.ustawieniaDao().getCzas() }
                     var tryb_number = async { appDatabase.ustawieniaDao().getTryb() }
-
-
                     launch {
                         //<----------Iteracje, zdjęcia, beepy---------->//
-
+                        Log.d("sesja",session.toString())
                         for (x in 1..tryb_number.await()) {
 
                             for (y in 1..czas_number.await()) {
@@ -133,42 +135,41 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                             takePhoto()
                         }
                         toneGen1.startTone(ToneGenerator.TONE_CDMA_LOW_SSL, 500)
+                        sendimage()
                     }
-
                 }
 
             }
-            pauseAudio()
-            Handler().postDelayed({
-                uploadImages()
-                runBlocking(Dispatchers.IO) {
-                    var x = appDatabase.id_folderDao().getiD()
-                    appDatabase.id_folderDao().update(x + 1)
-                }
-                session=false
-
-            }, 5000)
-
-        //}
         }
 
         val myButton = view.findViewById<Button>(R.id.button_menu)
         myButton.setOnClickListener {
-
-            val fragment: Fragment = MenuFragment()
-            val fragmentManager = requireActivity().supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.frameLayout, fragment)
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commit()
-            requireActivity().title = "Menu"
+            if(session==false) {
+                val fragment: Fragment = MenuFragment()
+                val fragmentManager = requireActivity().supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.frameLayout, fragment)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
+                requireActivity().title = "Menu"
+            }
         }
 
 
     }
 
-
-    fun playAudio(){
+    suspend fun sendimage() {
+            pauseAudio()
+            delay(5000)
+            uploadImages()
+            runBlocking(Dispatchers.IO) {
+                var x = appDatabase.id_folderDao().getiD()
+                appDatabase.id_folderDao().update(x + 1)
+            }
+            delay(5000)
+            session = false
+    }
+        fun playAudio(){
         var position = 0
 
 
