@@ -172,11 +172,10 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         runBlocking (Dispatchers.IO){ position = appDatabase.ustawieniaDao().getPiosenka_position() }
 
         //----------------------WYBRANIE MUZYKI------------------
-        if(position==0){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.deja_vu_chorus)}
+        if(position==0){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.pumpedup)}
         else if(position==1){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.crab)}
         else if(position==2){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.gandalf)}
         else if(position==3){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.wham_last_christmas)}
-        else if(position==4){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.pumpedup)}
         try{
             mediaPlayer!!.start()
         }catch(e: IOException){

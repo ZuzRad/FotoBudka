@@ -28,7 +28,7 @@ class MenuFragment : Fragment() {
     private val binding get() = _binding!!
     private val tryby = arrayOf("1 zdjęcie", "2 zdjęcia", "3 zdjęcia", "6 zdjęć")
     private val czas = arrayOf("1 sekunda", "3 sekundy", "5 sekund", "8 sekund")
-    private val piosenka = arrayOf("Deja vu","Crab","Gandalf","Last Christmas","Pumped Up Kicks")
+    private val piosenka = arrayOf("Pumped Up Kicks","Crab","Gandalf","Last Christmas")
     private var tryb_number = 0
     private var czas_number = 0
     private var tryb_position = 0
@@ -150,7 +150,7 @@ class MenuFragment : Fragment() {
         //----------------------BUTTON START------------------
         val myButton = view.findViewById<Button>(R.id.button_start)
         myButton.setOnClickListener{
-            pauseAudio()
+            if(isplaying == true){pauseAudio()}
             //----------------------DODANIE DO BAZY USTAWIEŃ--------------------
             GlobalScope.launch(Dispatchers.IO) {
                 appDatabase.ustawieniaDao().deleteAll()
@@ -166,12 +166,14 @@ class MenuFragment : Fragment() {
             fragmentTransaction.commit()
             requireActivity().title = "Strona Główna"
         }
+        //----------------------BUTTON PLAY--------------------
         val playButton = view.findViewById<Button>(R.id.button_play)
         playButton.setOnClickListener {
             if(isplaying==true){pauseAudio()}
             playAudio(piosenka_position)
             isplaying=true
         }
+        //----------------------BUTTON STOP--------------------
         val stopButton = view.findViewById<Button>(R.id.button_stop)
         stopButton.setOnClickListener {
             pauseAudio()
@@ -180,13 +182,12 @@ class MenuFragment : Fragment() {
 
 
     }
-
+    //----------------------WŁĄCZENIE MUZYKI--------------------
     fun playAudio(position: Int){
-        if(position==0){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.deja_vu_chorus)}
+        if(position==0){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.pumpedup)}
         else if(position==1){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.crab)}
         else if(position==2){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.gandalf)}
         else if(position==3){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.wham_last_christmas)}
-        else if(position==4){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.pumpedup)}
         try{
             mediaPlayer!!.start()
         }catch(e: IOException){
@@ -194,7 +195,7 @@ class MenuFragment : Fragment() {
         }
 
     }
-
+    //----------------------WYŁĄCZENIE MUZYKI--------------------
     fun pauseAudio(){
         if(mediaPlayer!!.isPlaying){
             mediaPlayer!!.stop()
