@@ -8,7 +8,6 @@ import android.media.ToneGenerator
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.provider.MediaStore.Audio.Media
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -104,7 +103,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
 
 
-        val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 1000)
+        val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 10000)
 //        if(session==false){
         val buttonStart = view.findViewById<Button>(R.id.button_start)
 
@@ -129,7 +128,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                                 toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150)
                                 delay(1000)
                             }
-                            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 300)
+                            toneGen1.startTone(ToneGenerator.TONE_CDMA_HIGH_L, 150) //TONE_CDMA_HIGH_L
                             delay(1000)
                             takePhoto()
                         }
@@ -171,12 +170,19 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
 
     fun playAudio(){
         var position = 0
+
+
         runBlocking (Dispatchers.IO){ position = appDatabase.ustawieniaDao().getPiosenka_position() }
 
         if(position==0){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.deja_vu_chorus)}
         else if(position==1){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.crab)}
         else if(position==2){ mediaPlayer = MediaPlayer.create(requireContext(),R.raw.gandalf)}
         else if(position==3){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.wham_last_christmas)}
+
+//        var maxVolume =50
+//        var currVolume = 50
+//        val log1 = (Math.log((maxVolume - currVolume).toDouble()) / Math.log(maxVolume.toDouble())).toFloat()
+//        mediaPlayer?.setVolume(log1, log1)
 
         try{
             mediaPlayer!!.start()
