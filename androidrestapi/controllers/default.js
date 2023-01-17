@@ -18,16 +18,8 @@ export const uploadImages = (req, res) => {
 
 	const doc = new jsPDF('p', 'mm', 'a4', true);
 	let y_offset = 0;
-	let x_offset = 0;
+	let x_offset = 105;
 	let index = 0;
-
-	// (async () => {
-	// 	await imagemin(['banners/*.jpg'], {
-	// 		destination: 'banners/build',
-	// 		plugins: [imageminJpegtran(), imageminMozjpeg({ quality: 75 })],
-	// 	});
-	// 	console.log('images optimized');
-	// })();
 
 	let bannerImage = fs.readFileSync(__dirname + `banners\\build\\${banner}.jpg`);
 
@@ -59,7 +51,7 @@ export const uploadImages = (req, res) => {
 				x_offset += 105;
 				y_offset = 0;
 			}
-			doc.addImage(file, 'JPEG', x_offset, y_offset, 90, 99, undefined, 'FAST');
+			doc.addImage(file, 'JPEG', x_offset - 15, y_offset + 9, 99, 90, undefined, 'FAST', 90);
 			y_offset += 99;
 		});
 		fs.rmSync(`${__dirname}build\\${senderName}`, { recursive: true, force: true });
