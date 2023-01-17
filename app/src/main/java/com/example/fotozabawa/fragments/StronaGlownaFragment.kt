@@ -83,7 +83,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                     if (appDatabase.ustawieniaDao().exists()==false) {
                         runBlocking(Dispatchers.IO) {
                             appDatabase.ustawieniaDao().deleteAll()
-                            val ustawienie = Ustawienia(1, 0, 2,0, "space",0)
+                            val ustawienie = Ustawienia(1, 1, 2,1, "space",1)
                             appDatabase.ustawieniaDao().insert(ustawienie)
                         }
                     }
@@ -205,7 +205,7 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         val image6: File
         val size = list_paths.size
 
-        //----------------------JEŚLI WYBRANO JEDNO ZDJĘCIA------------------
+        //----------------------JEŚLI WYBRANO JEDNO ZDJĘCIE------------------
         if(size==1){
             //<------ INICJOWANIE WARTOŚCI POCZĄTKOWYCH---->//
             val name = list_paths[0].subSequence(69, list_paths[0].length)
@@ -341,7 +341,13 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
             launch {
                 val id = async{appDatabase.id_folderDao().getiD()}
                 val banner_selected = async{appDatabase.ustawieniaDao().get_banner()}
-
+                var number2 = ""; var number3 = ""; var number4 = ""; var number5 = ""; var number6 = ""
+                when (size) {
+                    1 -> {number2 = "1"; number3="1"; number4 = "1"; number5 = "1"; number6 = "1";}
+                    2 -> {number2 = "1"; number3="1"; number4 = "2"; number5 = "2"; number6 = "2";}
+                    3 -> {number2 = "2"; number3="3"; number4 = "1"; number5 = "2"; number6 = "3";}
+                    6 -> {number2 = "2"; number3="3"; number4 = "4"; number5 = "5"; number6 = "6";}
+                }
                 //----------------------WYSYŁANIE DANYCH------------------
                 MyAPI().uploadImage(
                     RequestBody.create(
@@ -349,11 +355,11 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
                         "folder" + id.await().toString()
                     ),
                     MultipartBody.Part.createFormData("image1", "image1.jpg", body1),
-                    MultipartBody.Part.createFormData("image2", "image2.jpg", body2),
-                    MultipartBody.Part.createFormData("image3", "image3.jpg", body3),
-                    MultipartBody.Part.createFormData("image4", "image4.jpg", body4),
-                    MultipartBody.Part.createFormData("image5", "image5.jpg", body5),
-                    MultipartBody.Part.createFormData("image6", "image6.jpg", body6),
+                    MultipartBody.Part.createFormData("image2", "image${number2}.jpg", body2),
+                    MultipartBody.Part.createFormData("image3", "image${number3}.jpg", body3),
+                    MultipartBody.Part.createFormData("image4", "image${number4}.jpg", body4),
+                    MultipartBody.Part.createFormData("image5", "image${number5}.jpg", body5),
+                    MultipartBody.Part.createFormData("image6", "image${number6}.jpg", body6),
                     RequestBody.create(MediaType.parse("multipart/form-data"), banner_selected.await())
                 ).enqueue(object : Callback<UploadResponse> {
                     override fun onResponse(
