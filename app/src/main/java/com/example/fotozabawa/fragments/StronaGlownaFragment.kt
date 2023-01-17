@@ -179,6 +179,8 @@ class StronaGlownaFragment : Fragment(), UploadRequestBody.UploadCallback {
         else if(position==4){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.amogus)}
         else if(position==5){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.nowaera)}
         else if(position==6){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.vii)}
+        else if(position==7){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.starwars)}
+        else if(position==8){mediaPlayer = MediaPlayer.create(requireContext(),R.raw.wideputin)}
         try{
             mediaPlayer!!.start()
         }catch(e: IOException){
