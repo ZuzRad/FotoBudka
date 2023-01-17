@@ -117,19 +117,21 @@
 
     <ImageView
         android:id="@+id/imageView_baner1"
-        android:layout_width="10dp"
+        android:layout_width="40dp"
         android:layout_height="114dp"
 
         android:layout_marginHorizontal="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_start"
         app:layout_constraintStart_toEndOf="@+id/imageView_baner2"
         app:layout_constraintTop_toBottomOf="@+id/textView_baner"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
     <ImageView
         android:id="@+id/imageView_baner4"
-        android:layout_width="10dp"
+        android:layout_width="40dp"
         android:layout_height="114dp"
         android:layout_marginHorizontal="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_start"
         app:layout_constraintStart_toEndOf="@+id/imageView_baner3"
         app:layout_constraintTop_toBottomOf="@+id/textView_baner"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
@@ -137,36 +139,40 @@
 
     <ImageView
         android:id="@+id/imageView_baner5"
-        android:layout_width="10dp"
+        android:layout_width="40dp"
         android:layout_height="114dp"
         android:layout_marginHorizontal="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_start"
         app:layout_constraintStart_toEndOf="@+id/imageView_baner4"
         app:layout_constraintTop_toBottomOf="@+id/textView_baner"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
     <ImageView
         android:id="@+id/imageView_baner6"
-        android:layout_width="11dp"
+        android:layout_width="40dp"
         android:layout_height="113dp"
         android:layout_marginHorizontal="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_start"
         app:layout_constraintStart_toEndOf="@+id/imageView_baner5"
         app:layout_constraintTop_toBottomOf="@+id/textView_baner"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
     <ImageView
         android:id="@+id/imageView_baner3"
-        android:layout_width="10dp"
+        android:layout_width="40dp"
         android:layout_height="114dp"
         android:layout_marginHorizontal="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_start"
         app:layout_constraintStart_toEndOf="@+id/imageView_baner1"
         app:layout_constraintTop_toBottomOf="@+id/textView_baner"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
     <ImageView
         android:id="@+id/imageView_baner2"
-        android:layout_width="10dp"
+        android:layout_width="40dp"
         android:layout_height="114dp"
-        android:layout_marginLeft="150dp"
+        android:layout_marginLeft="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_start"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_baner"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
