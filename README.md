@@ -1,4 +1,4 @@
-# FOTOzabawa
+# FotoBudka
 
 1. Open androidrestapi with VS Code
 2. Open terminal and type "npm install"
